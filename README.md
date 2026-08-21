@@ -1,2 +1,434 @@
-# links-naturalizate.pa
-Link Servicios 
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Naturalízate.pa | Lic. Alfonso Villarreal</title>
+  <meta name="description" content="Asesoría jurídica especializada en naturalización panameña. Reservar evaluación, WhatsApp, redes sociales y más." />
+  <meta name="theme-color" content="#0d1b2a" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="profile" />
+  <meta property="og:title" content="Naturalízate.pa | Lic. Alfonso Villarreal" />
+  <meta property="og:description" content="Abogado especialista en Derecho Migratorio. +10 años de experiencia en naturalización panameña." />
+  <meta property="og:url" content="https://naturalizate.pa/" />
+  <meta property="og:site_name" content="Naturalízate.pa" />
+  <meta property="og:locale" content="es_PA" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Naturalízate.pa | Lic. Alfonso Villarreal" />
+  <meta name="twitter:description" content="Abogado especialista en Derecho Migratorio. +10 años de experiencia en naturalización panameña." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&display=swap"></noscript>
+
+  <style>
+    :root {
+      --navy: #0d1b2a;
+      --navy-mid: #1b3a57;
+      --navy-deep: #060f17;
+      --white: #ffffff;
+      --gray-100: #f1f3f5;
+      --gray-200: #e9ecef;
+      --gray-600: #6c757d;
+      --gray-700: #495057;
+      --gold: #d4a84b;
+      --gold-dark: #b8912f;
+      --wa: #25D366;
+      --wa-dark: #128C7E;
+      --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      min-height: 100vh;
+      background: var(--navy);
+      background-image:
+        radial-gradient(ellipse 80% 50% at 50% 0%, rgba(27, 58, 87, 0.5), transparent),
+        radial-gradient(ellipse 60% 40% at 80% 100%, rgba(212, 168, 75, 0.06), transparent);
+      font-family: var(--font-sans);
+      color: var(--white);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 48px 20px 60px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+    }
+
+    :focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; border-radius: 4px; }
+
+    /* ═══════ PROFILE ═══════ */
+    .profile {
+      text-align: center;
+      margin-bottom: 36px;
+      animation: fadeUp 0.6s ease-out both;
+    }
+
+    .avatar {
+      width: 120px;
+      height: 120px;
+      border-radius: 50%;
+      overflow: hidden;
+      margin: 0 auto 20px;
+      border: 3px solid var(--gold);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+      position: relative;
+    }
+
+    .avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+    }
+
+    .avatar-fallback {
+      width: 100%;
+      height: 100%;
+      background: var(--navy-mid);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-serif);
+      font-size: 2.2rem;
+      font-weight: 400;
+      font-style: italic;
+      color: var(--white);
+    }
+
+    .name {
+      font-family: var(--font-serif);
+      font-size: 1.5rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      margin-bottom: 6px;
+      color: var(--white);
+    }
+
+    .role {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 14px;
+    }
+
+    .bio {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: rgba(255, 255, 255, 0.65);
+      max-width: 360px;
+      margin: 0 auto;
+      font-weight: 300;
+    }
+
+    /* ═══════ STATS ═══════ */
+    .stats {
+      display: flex;
+      justify-content: center;
+      gap: 32px;
+      margin-bottom: 36px;
+      padding: 20px 0;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      animation: fadeUp 0.6s ease-out 0.1s both;
+    }
+
+    .stat { text-align: center; }
+
+    .stat-num {
+      font-family: var(--font-serif);
+      font-size: 1.4rem;
+      font-weight: 400;
+      color: var(--white);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .stat-num em {
+      font-style: italic;
+      color: var(--gold);
+    }
+
+    .stat-label {
+      font-size: 0.6rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.5);
+      font-weight: 600;
+    }
+
+    /* ═══════ LINKS ═══════ */
+    .links {
+      width: 100%;
+      max-width: 400px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .link {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px 20px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      color: var(--white);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: all 0.25s ease;
+      position: relative;
+      overflow: hidden;
+      animation: fadeUp 0.5s ease-out both;
+    }
+
+    .link:nth-child(1) { animation-delay: 0.15s; }
+    .link:nth-child(2) { animation-delay: 0.2s; }
+    .link:nth-child(3) { animation-delay: 0.25s; }
+    .link:nth-child(4) { animation-delay: 0.3s; }
+    .link:nth-child(5) { animation-delay: 0.35s; }
+    .link:nth-child(6) { animation-delay: 0.4s; }
+    .link:nth-child(7) { animation-delay: 0.45s; }
+
+    .link::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), transparent);
+      pointer-events: none;
+    }
+
+    .link:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: rgba(255, 255, 255, 0.2);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+    }
+
+    .link:active { transform: translateY(0); }
+
+    .link-icon {
+      width: 22px;
+      height: 22px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .link-icon svg {
+      width: 22px;
+      height: 22px;
+      fill: currentColor;
+    }
+
+    .link-text { flex: 1; }
+
+    .link-arrow {
+      font-size: 1rem;
+      opacity: 0.4;
+      transition: transform 0.25s ease, opacity 0.25s ease;
+    }
+
+    .link:hover .link-arrow {
+      opacity: 0.8;
+      transform: translateX(3px);
+    }
+
+    /* Featured link */
+    .link.featured {
+      background: linear-gradient(135deg, var(--gold), var(--gold-dark));
+      border-color: var(--gold);
+      color: var(--navy);
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      font-size: 0.78rem;
+    }
+
+    .link.featured:hover {
+      background: linear-gradient(135deg, var(--gold-dark), #a07d28);
+      border-color: var(--gold-dark);
+      box-shadow: 0 8px 32px rgba(212, 168, 75, 0.3);
+    }
+
+    .link.featured .link-icon svg { fill: var(--navy); }
+    .link.featured .link-arrow { color: var(--navy); opacity: 0.6; }
+    .link.featured:hover .link-arrow { opacity: 1; }
+
+    /* WhatsApp link */
+    .link.wa {
+      background: rgba(37, 211, 102, 0.1);
+      border-color: rgba(37, 211, 102, 0.25);
+    }
+
+    .link.wa:hover {
+      background: rgba(37, 211, 102, 0.18);
+      border-color: rgba(37, 211, 102, 0.4);
+      box-shadow: 0 8px 24px rgba(37, 211, 102, 0.15);
+    }
+
+    .link.wa .link-icon svg { fill: var(--wa); }
+
+    /* ═══════ FOOTER ═══════ */
+    .footer {
+      margin-top: 48px;
+      text-align: center;
+      animation: fadeUp 0.5s ease-out 0.5s both;
+    }
+
+    .footer-brand {
+      font-family: var(--font-serif);
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255, 255, 255, 0.4);
+      margin-bottom: 8px;
+    }
+
+    .footer-brand em {
+      font-style: italic;
+      color: rgba(255, 255, 255, 0.25);
+      font-weight: 400;
+    }
+
+    .footer-copy {
+      font-size: 0.7rem;
+      color: rgba(255, 255, 255, 0.25);
+      letter-spacing: 0.5px;
+    }
+
+    /* ═══════ ANIMATIONS ═══════ */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ═══════ RESPONSIVE ═══════ */
+    @media (max-width: 400px) {
+      body { padding: 36px 16px 48px; }
+      .avatar { width: 100px; height: 100px; }
+      .name { font-size: 1.3rem; }
+      .stats { gap: 24px; }
+      .link { padding: 14px 16px; font-size: 0.85rem; }
+    }
+
+    /* Dark mode support (already dark, but ensure) */
+    @media (prefers-color-scheme: dark) {
+      body { background: var(--navy-deep); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Profile -->
+  <div class="profile">
+    <div class="avatar">
+      <img src="perfil-villarreal.jpg" alt="Lic. Alfonso Villarreal, abogado especialista en naturalización panameña" width="120" height="120" loading="eager" />
+    </div>
+    <h1 class="name">Lic. Alfonso Villarreal</h1>
+    <p class="role">Abogado · Derecho Migratorio</p>
+    <p class="bio">+10 años de experiencia en naturalización panameña. Evaluación estratégica, transparencia total y acompañamiento integral.</p>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats" role="list" aria-label="Estadísticas de trayectoria">
+    <div class="stat" role="listitem">
+      <div class="stat-num"><em>10</em>+</div>
+      <div class="stat-label">Años</div>
+    </div>
+    <div class="stat" role="listitem">
+      <div class="stat-num"><em>99</em>+</div>
+      <div class="stat-label">Familias</div>
+    </div>
+    <div class="stat" role="listitem">
+      <div class="stat-num">98<em>%</em></div>
+      <div class="stat-label">Éxito</div>
+    </div>
+  </div>
+
+  <!-- Links -->
+  <nav class="links" aria-label="Enlaces principales">
+
+    <!-- FEATURED: Reservar Evaluación -->
+    <a href="https://naturalizatepa.github.io/naturalizate-pa/#formulario" class="link featured" target="_blank" rel="noopener noreferrer">
+      <span class="link-icon">
+        <svg viewBox="0 0 24 24"><path d="M19 3h-1V1h-2v2H8V1H6v2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm0 16H5V8h14v11zM9 10H7v2h2v-2zm4 0h-2v2h2v-2zm4 0h-2v2h2v-2z"/></svg>
+      </span>
+      <span class="link-text">Reservar Mi Evaluación</span>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <!-- WhatsApp Directo -->
+    <a href="https://wa.me/50762557583?text=Hola%2C%20quiero%20una%20evaluaci%C3%B3n%20de%20mi%20caso%20de%20naturalizaci%C3%B3n." class="link wa" target="_blank" rel="noopener noreferrer">
+      <span class="link-icon">
+        <svg viewBox="0 0 32 32"><path d="M16.004 0h-.008C7.174 0 0 7.176 0 16c0 3.5 1.132 6.744 3.052 9.376L1.056 31.2l6.064-1.952C9.656 30.932 12.704 32 16.004 32 24.826 32 32 24.824 32 16S24.826 0 16.004 0zm9.348 22.616c-.392 1.104-1.936 2.024-3.184 2.292-.856.18-1.976.324-5.74-1.232-4.816-1.996-7.916-6.868-8.156-7.184-.232-.316-1.936-2.576-1.936-4.912 0-2.336 1.228-3.484 1.664-3.96.392-.428 1.036-.624 1.656-.624.2 0 .38.012.54.02.436.02.656.048.944.736.36.856 1.236 3.012 1.344 3.232.108.22.216.516.068.812-.14.304-.264.492-.484.756-.22.264-.432.464-.652.748-.2.252-.424.52-.18.96.244.432 1.084 1.796 2.328 2.904 1.6 1.424 2.904 1.872 3.368 2.068.336.144.736.112.98-.144.312-.328.696-.872 1.088-1.416.28-.388.632-.436.992-.292.368.136 2.328 1.096 2.728 1.296.4.2.664.3.76.468.096.168.096.968-.296 2.072z"/></svg>
+      </span>
+      <span class="link-text">Escribir por WhatsApp</span>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <!-- Sitio Web -->
+    <a href="https://naturalizatepa.github.io/naturalizate-pa/#" class="link" target="_blank" rel="noopener noreferrer">
+      <span class="link-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z"/></svg>
+      </span>
+      <span class="link-text">Sitio Web · naturalizate.pa</span>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <!-- TikTok -->
+    <a href="https://www.tiktok.com/@naturalizate.pa" class="link" target="_blank" rel="noopener noreferrer">
+      <span class="link-icon">
+        <svg viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/></svg>
+      </span>
+      <span class="link-text">TikTok · @naturalizate.pa</span>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <!-- Instagram -->
+    <a href="https://www.instagram.com/naturalizate.pa/" class="link" target="_blank" rel="noopener noreferrer">
+      <span class="link-icon">
+        <svg viewBox="0 0 24 24"><path d="M7.8 2h8.4C19.4 2 22 4.6 22 7.8v8.4a5.8 5.8 0 0 1-5.8 5.8H7.8C4.6 22 2 19.4 2 16.2V7.8A5.8 5.8 0 0 1 7.8 2m-.2 2A3.6 3.6 0 0 0 4 7.6v8.8C4 18.39 5.61 20 7.6 20h8.8a3.6 3.6 0 0 0 3.6-3.6V7.6C20 5.61 18.39 4 16.4 4H7.6m9.65 1.5a1.25 1.25 0 0 1 1.25 1.25A1.25 1.25 0 0 1 17.25 8 1.25 1.25 0 0 1 16 6.75a1.25 1.25 0 0 1 1.25-1.25M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3z"/></svg>
+      </span>
+      <span class="link-text">Instagram · @naturalizate.pa</span>
+      <span class="link-arrow">→</span>
+    </a>
+
+    <!-- LinkedIn -->
+    <a href="https://www.linkedin.com/in/naturalizate-pa/" class="link" target="_blank" rel="noopener noreferrer">
+      <span class="link-icon">
+        <svg viewBox="0 0 24 24"><path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.32 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.79M6.88 8.56a1.68 1.68 0 0 0 1.68-1.68c0-.93-.75-1.69-1.68-1.69a1.69 1.69 0 0 0-1.69 1.69c0 .93.76 1.68 1.69 1.68m1.39 9.94v-8.37H5.5v8.37h2.77z"/></svg>
+      </span>
+      <span class="link-text">LinkedIn · Alfonso Villarreal</span>
+      <span class="link-arrow">→</span>
+    </a>
+
+  </nav>
+
+  <!-- Footer -->
+  <div class="footer">
+    <p class="footer-brand">Naturalízate <em>.pa</em></p>
+    <p class="footer-copy">© 2026 Lic. Alfonso Villarreal · Derecho Migratorio</p>
+  </div>
+
+</body>
+</html>
