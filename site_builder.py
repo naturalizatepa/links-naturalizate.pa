@@ -12,7 +12,7 @@ from html import escape
 from pathlib import Path
 
 from pages_content import EMAIL, FAQ, PAGES, WHATSAPP
-from services_data import ALL_SERVICES, CATEGORIES, CATEGORY_BY_SLUG, LEGAL_GROUPS
+from services_data import ALL_SERVICES, CATEGORIES, CATEGORY_BY_SLUG, GROUP_BY_CATEGORY, LEGAL_GROUPS
 
 ROOT = Path(__file__).resolve().parent
 
@@ -24,42 +24,94 @@ MAP = "https://www.google.com/maps/search/?api=1&amp;query=Ciudad+de+Panama"
 GUIDE = "https://naturalizatepa.github.io/naturalizate-pa/guia.html"
 
 
-def nav_link(href, label, active, key):
-    current = ' aria-current="page"' if active == key else ""
-    return f'<a class="nav-link" href="{href}"{current}>{label}</a>'
+def _is_current(active, key):
+    """Un enlace se marca activo si su clave coincide; una clave puede ser una
+    lista para que un menú desplegable se marque cuando cualquiera de sus
+    páginas hijas está activa."""
+    keys = key if isinstance(key, (list, tuple, set)) else [key]
+    return active in keys
 
 
-def dropdown(href, label, key, active, links, identifier):
-    current = ' aria-current="page"' if active == key else ""
-    entries = "\n".join(f'<a href="{url}">{name}</a>' for url, name in links)
+def nav_link(href, label, active, key, cta=False):
+    current = ' aria-current="page"' if _is_current(active, key) else ""
+    cls = "nav-link nav-cta" if cta else "nav-link"
+    return f'<a class="{cls}" href="{href}"{current}>{label}</a>'
+
+
+# Chevron único reutilizado por todos los niveles del menú (gira por CSS).
+CARET = '<svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="m2 4.5 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>'
+
+
+def menu_list(nodes, level):
+    """Lista de submenú recursiva, como el MegaNavbar de la referencia.
+
+    Los nodos con `children` despliegan un panel lateral (flyout) en escritorio
+    y un acordeón anidado en móvil. Cada nivel usa el mismo marcado, de modo que
+    el efecto al desplegar es idéntico en todos los niveles.
+    """
+    items = []
+    for node in nodes:
+        href, label = node["href"], escape(node["label"])
+        children = node.get("children")
+        if children:
+            identifier = node["id"]
+            items.append(
+                f'<li class="nav-subitem has-submenu" data-subdropdown>'
+                f'<div class="nav-subrow"><a class="nav-sublink" href="{href}">{label}</a>'
+                f'<button class="nav-subcaret" type="button" aria-label="Abrir submenú de {label}" aria-expanded="false" aria-controls="{identifier}">{CARET}</button></div>'
+                f'<div class="nav-subpanel" id="{identifier}">{menu_list(children, level + 1)}</div>'
+                f'</li>'
+            )
+        else:
+            items.append(f'<li class="nav-subitem"><a class="nav-sublink" href="{href}">{label}</a></li>')
+    return f'<ul class="nav-menu nav-menu-l{level}">' + "".join(items) + "</ul>"
+
+
+def dropdown(href, label, key, active, nodes, identifier, align_right=False):
+    current = ' aria-current="page"' if _is_current(active, key) else ""
+    panel_class = "nav-panel nav-panel-right" if align_right else "nav-panel"
     return f'''<div class="nav-item has-dropdown" data-dropdown>
       <a class="nav-link" href="{href}"{current}>{label}</a>
-      <button class="nav-caret" type="button" aria-label="Abrir submenú de {label}" aria-expanded="false" aria-controls="{identifier}">
-        <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="m2 4.5 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
-      </button>
-      <div class="nav-panel" id="{identifier}">{entries}</div>
+      <button class="nav-caret" type="button" aria-label="Abrir submenú de {label}" aria-expanded="false" aria-controls="{identifier}">{CARET}</button>
+      <div class="{panel_class}" id="{identifier}">{menu_list(nodes, 2)}</div>
     </div>'''
 
 
 def navigation(active):
-    areas = [(f"areas-de-practica.html#{group['slug']}", f"{group['number']} {group['title']}") for group in LEGAL_GROUPS]
-    areas.append(("areas-de-practica.html", "Ver el catálogo completo →"))
-    information = [
-        ("informacion-legal.html#articulos", "Notas de práctica"),
-        ("informacion-legal.html#proceso", "Etapas del trabajo"),
-        ("informacion-legal.html#enlaces-oficiales", "Enlaces del Gobierno"),
-        (GUIDE, "Guía de Naturalízate.pa ↗"),
+    # Menú de tres niveles: Áreas de práctica → categoría → servicios, igual que
+    # la navegación pública de la referencia, pero con el catálogo del despacho.
+    areas = [
+        {
+            "href": f"{category['slug']}.html",
+            "label": category["title"],
+            "id": f"submenu-{category['slug']}",
+            "children": [
+                {"href": f"{category['slug']}.html#{service['slug']}", "label": service["title"]}
+                for service in category["services"]
+            ],
+        }
+        for category in CATEGORIES
+    ]
+    areas.append({"href": "propiedades.html", "label": "Operaciones inmobiliarias"})
+    areas.append({"href": "areas-de-practica.html", "label": "Ver el catálogo completo →"})
+    # «Recursos» agrupa la información de apoyo y el aviso legal para que el
+    # menú principal quede en las rutas que el cliente usa de verdad.
+    resources = [
+        {"href": "informacion-legal.html", "label": "Información legal"},
+        {"href": "informacion-legal.html#articulos", "label": "Notas de práctica"},
+        {"href": "informacion-legal.html#proceso", "label": "Etapas del trabajo"},
+        {"href": "informacion-legal.html#enlaces-oficiales", "label": "Enlaces del Gobierno"},
+        {"href": GUIDE, "label": "Guía de Naturalízate.pa ↗"},
+        {"href": "herramientas.html", "label": "Preparar una consulta"},
+        {"href": "descargo.html", "label": "Descargo y aviso legal"},
     ]
     items = [
         nav_link("index.html", "Inicio", active, "inicio"),
-        dropdown("areas-de-practica.html", "Áreas de práctica", "areas", active, areas, "submenu-areas"),
+        dropdown("areas-de-practica.html", "Áreas de práctica", ["areas", "category", "propiedades"], active, areas, "submenu-areas"),
         nav_link("propiedad-horizontal.html", "Propiedad horizontal", active, "ph"),
-        nav_link("propiedades.html", "Propiedades", active, "propiedades"),
         nav_link("honorarios.html", "Honorarios", active, "honorarios"),
-        nav_link("descargo.html", "Descargo", active, "descargo"),
-        dropdown("informacion-legal.html", "Información legal", "informacion", active, information, "submenu-informacion"),
-        nav_link("herramientas.html", "Herramientas", active, "herramientas"),
-        nav_link("contacto.html", "Contáctenos", active, "contacto"),
+        dropdown("informacion-legal.html", "Recursos", ["informacion", "herramientas", "descargo"], active, resources, "submenu-recursos", align_right=True),
+        nav_link("contacto.html", "Contáctenos", active, "contacto", cta=True),
     ]
     return "\n".join(items)
 
@@ -69,7 +121,7 @@ def header(active):
     <header class="site-masthead">
       <div class="shell masthead-inner">
         <div class="utility-row"><span class="utility-locale"><span class="locale-mark" aria-hidden="true">PA</span> Panamá · Español</span><a href="{WHATSAPP}" target="_blank" rel="noopener noreferrer">WhatsApp +507 6255-7583 <span aria-hidden="true">↗</span></a></div>
-        <div class="brand-block"><a class="brand-link" href="index.html" aria-label="Alfonso Villarreal, página de inicio"><img src="assets/logo_horizontal_1600.png" alt="Alfonso Villarreal · Abogado" width="1600" height="400" /></a><p>Abogado · Idoneidad No. 25795 · Panamá</p></div>
+        <div class="brand-block"><a class="brand-link" href="index.html" aria-label="Alfonso Villarreal, página de inicio"><img src="assets/brand/logos/logo-horizontal-800.png" srcset="assets/brand/logos/logo-horizontal-400.png 400w, assets/brand/logos/logo-horizontal-800.png 800w, assets/brand/logos/logo-horizontal-1600.png 1600w" sizes="(max-width: 560px) 370px, 400px" alt="Alfonso Villarreal · Abogado" width="800" height="200" decoding="async" /></a><p>Abogado · Idoneidad No. 25795 · Panamá</p></div>
       </div>
     </header>
     <nav class="site-nav" aria-label="Navegación principal">
@@ -119,7 +171,7 @@ def footer():
           <div class="contact-row"><span class="contact-symbol" aria-hidden="true">◔</span><div><strong>WhatsApp</strong><a href="{WHATSAPP}" target="_blank" rel="noopener noreferrer">+507 6255-7583</a></div></div>
           <div class="contact-row"><span class="contact-symbol" aria-hidden="true">✉</span><div><strong>Correo electrónico</strong><a href="mailto:{EMAIL}">{EMAIL}</a></div></div>
           <div class="contact-row"><span class="contact-symbol" aria-hidden="true">§</span><div><strong>Idoneidad</strong><address>No. 25795<br />Corte Suprema de Justicia de Panamá</address></div></div>
-          <div class="contact-row"><span class="contact-symbol" aria-hidden="true">↗</span><div><strong>Más información</strong><a href="areas-de-practica.html">Áreas de práctica</a><a href="honorarios.html">Criterios de honorarios</a><a href="{GUIDE}" target="_blank" rel="noopener noreferrer">Guía de naturalización</a></div></div>
+          <div class="contact-row"><span class="contact-symbol" aria-hidden="true">↗</span><div><strong>Más información</strong><a href="areas-de-practica.html">Áreas de práctica</a><a href="propiedades.html">Operaciones inmobiliarias</a><a href="honorarios.html">Criterios de honorarios</a><a href="herramientas.html">Preparar una consulta</a><a href="{GUIDE}" target="_blank" rel="noopener noreferrer">Guía de naturalización</a><a href="descargo.html">Descargo y aviso legal</a><a href="brandbook.html">Manual de marca</a></div></div>
         </section>
         <section class="footer-map-col" aria-labelledby="footer-map-title">
           <h2 id="footer-map-title">Ubicación</h2>
@@ -127,7 +179,8 @@ def footer():
           <a class="map-open" href="{MAP}" target="_blank" rel="noopener noreferrer">Ver ubicación en Google Maps <span aria-hidden="true">↗</span></a>
         </section>
       </div>
-      <div class="footer-bottom"><img src="assets/logo_horizontal_1600.png" alt="Alfonso Villarreal" width="1600" height="400" loading="lazy" /><div><p>© <span id="year">2026</span> Alfonso Villarreal · Abogado</p><small>Despacho privado. La información es general y no garantiza un resultado. Cada encargo se delimita por escrito.</small></div></div>
+      <div class="footer-bottom"><img src="assets/brand/logos/logo-horizontal-400.png" alt="Alfonso Villarreal" width="400" height="100" loading="lazy" decoding="async" /><div><p>© <span id="year">2026</span> Alfonso Villarreal · Abogado</p><small>Despacho privado. La información es general y no garantiza un resultado. Cada encargo se delimita por escrito.</small></div></div>
+      <button class="back-to-top" type="button" aria-label="Volver arriba" hidden><svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5" /><path d="m5 12 7-7 7 7" /></svg></button>
       <a class="floating-contact" href="{WHATSAPP}" target="_blank" rel="noopener noreferrer" aria-label="Escribir por WhatsApp al despacho Alfonso Villarreal"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="1.65" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.4 11.7a8.3 8.3 0 0 1-12.1 7.4l-4.8 1.1 1.2-4.6A8.3 8.3 0 1 1 20.4 11.7Z"/><path d="M8.5 8.3c.4-.3.8-.2 1 .3l.8 1.8c.1.3.1.5-.1.8l-.6.8c.8 1.4 1.9 2.4 3.3 3.1l.7-.7c.3-.2.5-.3.8-.2l1.8.7c.5.2.6.6.3 1-.5.8-1.2 1.2-2.1 1.2-3.3-.1-7-3.5-7.1-6.9 0-.8.4-1.5 1.2-1.9Z"/></svg></a>
     </footer>'''
 
@@ -166,6 +219,52 @@ def structured_data():
     )
 
 
+# Ruta de navegación (migas de pan) de cada página. Las páginas de categoría
+# se resuelven dinámicamente más abajo con su área del derecho como padre.
+BREADCRUMBS = {
+    "areas-de-practica.html": [("index.html", "Inicio")],
+    "propiedades.html": [("index.html", "Inicio"), ("areas-de-practica.html", "Áreas de práctica")],
+    "propiedad-horizontal.html": [("index.html", "Inicio"), ("areas-de-practica.html", "Áreas de práctica")],
+    "honorarios.html": [("index.html", "Inicio")],
+    "contacto.html": [("index.html", "Inicio")],
+    "informacion-legal.html": [("index.html", "Inicio"), ("informacion-legal.html", "Recursos")],
+    "herramientas.html": [("index.html", "Inicio"), ("informacion-legal.html", "Recursos")],
+    "descargo.html": [("index.html", "Inicio"), ("informacion-legal.html", "Recursos")],
+    "404.html": [("index.html", "Inicio")],
+}
+
+# Etiqueta corta de cada página para la última miga (la posición actual).
+CRUMB_LABEL = {
+    "areas-de-practica.html": "Áreas de práctica",
+    "propiedades.html": "Operaciones inmobiliarias",
+    "propiedad-horizontal.html": "Propiedad horizontal",
+    "honorarios.html": "Honorarios",
+    "contacto.html": "Contáctenos",
+    "informacion-legal.html": "Información legal",
+    "herramientas.html": "Preparar una consulta",
+    "descargo.html": "Descargo",
+    "404.html": "Página no encontrada",
+}
+
+
+def breadcrumb(filename, page):
+    """Migas de pan para orientación. Devuelve '' en la portada."""
+    if page.get("home"):
+        return ""
+    slug = filename[:-5]
+    if slug in CATEGORY_BY_SLUG and filename not in BREADCRUMBS:
+        group = GROUP_BY_CATEGORY[slug]
+        trail = [("index.html", "Inicio"), ("areas-de-practica.html", "Áreas de práctica"),
+                 (f"areas-de-practica.html#{group['slug']}", group["title"])]
+        label = CATEGORY_BY_SLUG[slug]["title"]
+    else:
+        trail = BREADCRUMBS.get(filename, [("index.html", "Inicio")])
+        label = CRUMB_LABEL.get(filename, page["title"].split(" | ")[0])
+    crumbs = "".join(f'<li><a href="{href}">{escape(text)}</a></li>' for href, text in trail)
+    crumbs += f'<li aria-current="page">{escape(label)}</li>'
+    return f'<nav class="breadcrumb-trail" aria-label="Ruta de navegación"><ol>{crumbs}</ol></nav>'
+
+
 def build_page(filename, page):
     title = escape(page["title"], quote=True)
     description = escape(page["description"], quote=True)
@@ -180,6 +279,7 @@ def build_page(filename, page):
     main = f'''<main class="shell main-shell{' is-home' if home else ' is-inner'}" id="contenido">
     {HERO if home else ''}
     {SEARCH}
+    {breadcrumb(filename, page)}
     {page['body']}
     </main>'''
     return f'''<!doctype html>
@@ -263,12 +363,34 @@ def build_catalog_index():
     return len(entries)
 
 
+def build_seo():
+    """robots.txt siempre; sitemap.xml solo cuando exista dominio público (SITE).
+    Las páginas conservan su meta robots propia mientras no haya despliegue."""
+    lines = ["User-agent: *", "Allow: /"]
+    if SITE:
+        lines.append(f"Sitemap: {SITE}sitemap.xml")
+    (ROOT / "robots.txt").write_text("\n".join(lines) + "\n", encoding="utf-8")
+    if not SITE:
+        return 0
+    urls = []
+    for filename, page in PAGES.items():
+        if filename == "404.html" or page.get("robots", "noindex, follow").startswith("noindex"):
+            continue
+        loc = SITE if page.get("home") else SITE + filename
+        priority = "1.0" if page.get("home") else "0.7"
+        urls.append(f"  <url><loc>{loc}</loc><priority>{priority}</priority></url>")
+    sitemap = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' + "\n".join(urls) + "\n</urlset>\n"
+    (ROOT / "sitemap.xml").write_text(sitemap, encoding="utf-8")
+    return len(urls)
+
+
 def main():
     build_catalog_index()
     for filename, page in PAGES.items():
         target = ROOT / filename
         target.write_text(build_page(filename, page), encoding="utf-8")
         print(f"Generated {target.name}: {target.stat().st_size} bytes")
+    build_seo()
 
 
 if __name__ == "__main__":

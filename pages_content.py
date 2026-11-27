@@ -39,6 +39,27 @@ def sidebar(title="Áreas de práctica", exclude=None):
       </aside>'''
 
 
+def home_toc():
+    """Índice real de la portada: enlaces a las secciones de esta misma página
+    (antes el bloque «En esta página» apuntaba a las áreas de práctica)."""
+    links = [
+        ("#puertas", "Persona o empresa"),
+        ("#areas", "Áreas de práctica"),
+        ("#retainer-ph", "Retainer propiedad horizontal"),
+        ("#metodo", "Cómo trabajamos"),
+        ("#perfil", "El despacho"),
+        ("#preguntas", "Preguntas frecuentes"),
+        ("#calificacion", "Prepare su consulta"),
+        ("#contacto", "Contacto"),
+    ]
+    items = "\n".join(f'<li><a href="{href}">{escape(label)}</a></li>' for href, label in links)
+    return f'''<aside class="related-sidebar home-toc" aria-label="En esta página">
+        <h2>En esta página</h2>
+        <ul>{items}</ul>
+        <div class="legal-precision"><p>El primer contacto y la orientación inicial son gratuitos.</p><a class="text-action" href="contacto.html">Solicitar una conversación →</a></div>
+      </aside>'''
+
+
 def category_options():
     return "\n".join(
         f'<option value="{escape(cat["slug"])}">{escape(cat["title"])}</option>' for cat in CATEGORIES
@@ -111,7 +132,7 @@ def home():
           <p class="signature"><strong>Lic. Alfonso Villarreal</strong><br />Abogado · Idoneidad No. 25795</p>
         </div>
       </article>
-      {sidebar("En esta página")}
+      {home_toc()}
     </div>
     <section class="home-band alt" id="puertas">
       <div class="band-head"><span class="eyebrow">Dos puertas de entrada claras</span><h2>Elija por dónde empieza: <em>persona</em> o <em>empresa</em></h2><p>El mismo estándar de revisión, con un alcance distinto según quien consulta. En ambos casos la propuesta se entrega por escrito.</p></div>
@@ -217,27 +238,46 @@ def home():
     </section>'''
 
 
+CHEVRON = '<svg class="pa-chev" viewBox="0 0 12 12" width="14" height="14" aria-hidden="true"><path d="m2 4.5 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>'
+
+
 def practice_index():
     sections = []
-    for group in LEGAL_GROUPS:
-        entries = "\n".join(
-            f'''<a href="{CATEGORY_BY_SLUG[slug]['slug']}.html"><span>{len(CATEGORY_BY_SLUG[slug]['services'])} servicios</span><strong>{escape(CATEGORY_BY_SLUG[slug]['title'])}</strong><small>{escape(CATEGORY_BY_SLUG[slug]['intro'])}</small></a>'''
-            for slug in group["categories"]
-        )
-        audience = " ".join(CATEGORY_BY_SLUG[slug]["audience"] for slug in group["categories"])
-        sections.append(f'''<section class="content-section" id="{group['slug']}">
-          <span class="section-index">{group['number']} · Área del derecho</span>
-          <h2>{escape(group['title'])}</h2>
-          <p>{escape(group['intro'])}</p>
-          <p class="audience-line"><strong>A quién ayudamos:</strong> {escape(audience)}</p>
-          <div class="article-list">{entries}</div>
-        </section>''')
+    for gi, group in enumerate(LEGAL_GROUPS):
+        cats = [CATEGORY_BY_SLUG[slug] for slug in group["categories"]]
+        total = sum(len(c["services"]) for c in cats)
+        audience = " ".join(c["audience"] for c in cats)
+        subs = []
+        for cat in cats:
+            services = "".join(
+                f'<li><a href="{cat["slug"]}.html#{svc["slug"]}"><span class="pa-svc-title">{escape(svc["title"])}</span><small>{escape(svc["description"])}</small></a></li>'
+                for svc in cat["services"]
+            )
+            subs.append(f'''<details class="pa-details pa-level2">
+            <summary class="pa-summary pa-sub-summary"><span class="pa-title">{escape(cat['title'])}</span><span class="pa-count">{len(cat['services'])} servicios</span>{CHEVRON}</summary>
+            <div class="pa-body">
+              <p class="pa-intro">{escape(cat['intro'])}</p>
+              <ul class="pa-services">{services}</ul>
+              <a class="pa-more" href="{cat['slug']}.html">Ver el área completa <span aria-hidden="true">→</span></a>
+            </div>
+          </details>''')
+        opened = " open" if gi == 0 else ""
+        sections.append(f'''<section class="content-section pa-group" id="{group['slug']}">
+        <details class="pa-details pa-level1"{opened}>
+          <summary class="pa-summary"><span class="pa-head"><span class="section-index">{group['number']} · Área del derecho</span><span class="pa-title">{escape(group['title'])}</span></span><span class="pa-count">{len(cats)} áreas · {total} servicios</span>{CHEVRON}</summary>
+          <div class="pa-body">
+            <p>{escape(group['intro'])}</p>
+            <p class="audience-line"><strong>A quién ayudamos:</strong> {escape(audience)}</p>
+            <div class="pa-subsections">{''.join(subs)}</div>
+          </div>
+        </details>
+      </section>''')
     return f'''<div class="content-columns">
       <article class="article-main">
         <div class="page-heading">
       <span class="eyebrow">Áreas de práctica</span>
       <h1>Áreas del derecho. Trámites específicos.</h1>
-      <p>Seleccione primero el ámbito jurídico y después el procedimiento de su interés. Cada ficha indica a quién ayuda; alcance, documentos y honorarios se acuerdan tras revisar el asunto.</p>
+      <p>Despliegue cada área del derecho y, dentro de ella, cada subsección para ver sus trámites. Cada ficha indica a quién ayuda; alcance, documentos y honorarios se acuerdan tras revisar el asunto.</p>
       <span class="count-chip">{sum(len(cat['services']) for cat in CATEGORIES)} servicios en {len(LEGAL_GROUPS)} áreas del derecho</span>
     </div>
         {orientation_note()}
@@ -261,7 +301,6 @@ def category_page(category):
     return f'''<div class="content-columns">
       <article class="article-main">
         <div class="page-heading">
-      <a class="breadcrumb" href="areas-de-practica.html#{group['slug']}">← {escape(group['title'])}</a>
       <span class="eyebrow">{category['number']} · Área de práctica</span>
       <h1>{escape(category['title'])}</h1>
       <p>{escape(category['intro'])}</p>

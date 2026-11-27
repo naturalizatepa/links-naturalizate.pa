@@ -65,18 +65,37 @@ button { cursor: pointer; }
 .site-nav { position: relative; z-index: 60; background: var(--navy); color: #fff; }
 .nav-inner { height: 50px; }
 .nav-links { display: flex; height: 100%; align-items: stretch; justify-content: space-between; }
-.nav-link { display: flex; align-items: center; min-height: 50px; padding: 0 10px; color: #fff; white-space: nowrap; text-decoration: none; font-size: 11px; font-weight: 500; transition: background .18s ease; }
+.nav-link { display: flex; align-items: center; min-height: 50px; padding: 0 14px; color: #fff; white-space: nowrap; text-decoration: none; font-size: 12px; font-weight: 500; transition: background .18s ease; }
 .nav-link:hover, .nav-link:focus-visible, .nav-link[aria-current="page"], .nav-item:hover > .nav-link, .nav-item.is-open > .nav-link { background: var(--navy-mid); }
 .nav-item { display: flex; position: relative; align-items: stretch; }
 .nav-item > .nav-link { padding-right: 2px; }
 .nav-caret { display: grid; place-items: center; width: 18px; border: 0; padding: 0 3px 0 0; background: transparent; color: #fff; }
 .nav-item:hover > .nav-caret, .nav-item.is-open > .nav-caret { background: var(--navy-mid); }
-.nav-caret svg { transition: transform .18s ease; }
+.nav-caret svg { transition: transform .25s ease; }
 .nav-item.is-open .nav-caret svg { transform: rotate(180deg); }
-.nav-panel { display: none; position: absolute; z-index: 65; left: 0; top: 100%; width: 265px; padding: 5px 0; border-top: 1px solid #33516a; background: var(--navy); box-shadow: 0 11px 23px #0003; }
-.nav-item:hover .nav-panel, .nav-item:focus-within .nav-panel, .nav-item.is-open .nav-panel { display: block; }
-.nav-panel a { display: block; padding: 10px 15px; color: #fff; font-size: 11px; line-height: 1.45; text-decoration: none; }
-.nav-panel a:hover, .nav-panel a:focus-visible { background: var(--navy-mid); }
+
+/* ── Menú multinivel con el efecto al desplegar clonado de la referencia ──
+   Nivel 1 cae con un fundido + deslizamiento; los submenús salen hacia la
+   derecha (flyout) con su propio fundido. En móvil todo se vuelve acordeón. */
+.nav-panel, .nav-subpanel { position: absolute; z-index: 65; display: none; background: var(--navy); box-shadow: 0 12px 28px #00000061; }
+.nav-panel { top: 100%; left: 0; min-width: 280px; width: max-content; padding: 6px 0; border-top: 2px solid var(--navy-soft); }
+.nav-panel-right { left: auto; right: 0; }
+.nav-subpanel { top: 0; left: 100%; min-width: 260px; width: max-content; max-height: calc(100vh - 70px); overflow-y: auto; padding: 6px 0; border-left: 2px solid var(--navy-soft); scrollbar-width: thin; scrollbar-color: var(--navy-soft) transparent; }
+.nav-subpanel::-webkit-scrollbar { width: 6px; }
+.nav-subpanel::-webkit-scrollbar-thumb { background: var(--navy-soft); border-radius: 3px; }
+.nav-item:hover > .nav-panel, .nav-item:focus-within > .nav-panel, .nav-item.is-open > .nav-panel { display: block; animation: nav-drop-in .4s ease both; }
+.nav-subitem:hover > .nav-subpanel, .nav-subitem:focus-within > .nav-subpanel, .nav-subitem.is-open > .nav-subpanel { display: block; animation: nav-fly-in .32s ease both; }
+@keyframes nav-drop-in { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes nav-fly-in { from { opacity: 0; transform: translateX(-10px); } to { opacity: 1; transform: translateX(0); } }
+
+.nav-menu { margin: 0; padding: 0; list-style: none; }
+.nav-subitem { position: relative; }
+.nav-subrow { display: flex; align-items: stretch; }
+.nav-sublink { flex: 1; display: block; padding: 9px 15px; color: #fff; white-space: nowrap; font-size: 11px; line-height: 1.45; text-decoration: none; }
+.nav-sublink:hover, .nav-sublink:focus-visible, .nav-subitem:hover > .nav-subrow > .nav-sublink, .nav-subitem.is-open > .nav-subrow > .nav-sublink { background: var(--navy-mid); }
+.nav-subcaret { display: grid; place-items: center; width: 30px; border: 0; padding: 0; background: transparent; color: #fff; }
+.nav-subitem:hover > .nav-subrow > .nav-subcaret, .nav-subitem.is-open > .nav-subrow > .nav-subcaret { background: var(--navy-mid); }
+.nav-subcaret svg { transform: rotate(-90deg); transition: transform .25s ease; }
 .nav-mobile-brand, .menu-toggle { display: none; }
 
 /* Homepage hero, compact search line, article and 75/25 related-links column. */
@@ -271,9 +290,19 @@ button { cursor: pointer; }
   .nav-item { display: flex; flex-wrap: wrap; }
   .nav-item > .nav-link { flex: 1; }
   .nav-caret { width: 43px; border-bottom: 1px solid #ffffff1c; }
-  .nav-item:hover .nav-panel, .nav-item:focus-within .nav-panel { display: none; }
-  .nav-item.is-open .nav-panel { position: static; display: block; width: 100%; padding: 0 0 5px 13px; border: 0; background: #142c40; box-shadow: none; }
-  .nav-panel a { padding: 9px 11px; border-bottom: 1px solid #ffffff16; font-size: 12px; }
+
+  /* Acorrdeón multinivel: cada panel se despliega con una transición de altura
+     (grid 0fr → 1fr), anidando los submenús con sangría, como en la referencia. */
+  .nav-panel, .nav-subpanel { position: static; display: grid; grid-template-rows: 0fr; width: 100%; min-width: 0; max-height: none; padding: 0; border: 0; box-shadow: none; overflow: hidden; background: #142c40; transition: grid-template-rows .35s ease; animation: none; }
+  .nav-panel > .nav-menu, .nav-subpanel > .nav-menu { overflow: hidden; min-height: 0; }
+  .nav-item:hover > .nav-panel, .nav-item:focus-within > .nav-panel, .nav-item.is-open > .nav-panel { display: grid; animation: none; }
+  .nav-subitem:hover > .nav-subpanel, .nav-subitem:focus-within > .nav-subpanel, .nav-subitem.is-open > .nav-subpanel { display: grid; animation: none; }
+  .nav-item.is-open > .nav-panel, .nav-subitem.is-open > .nav-subpanel { grid-template-rows: 1fr; }
+  .nav-subpanel { margin-left: 13px; width: calc(100% - 13px); background: #0f2436; }
+  .nav-sublink { padding: 9px 11px; border-bottom: 1px solid #ffffff16; white-space: normal; font-size: 12px; }
+  .nav-subcaret { width: 43px; border-bottom: 1px solid #ffffff16; }
+  .nav-subcaret svg { transform: rotate(0deg); }
+  .nav-subitem.is-open > .nav-subrow > .nav-subcaret svg { transform: rotate(180deg); }
   body.menu-open { overflow: hidden; }
 }
 
@@ -597,4 +626,86 @@ button { cursor: pointer; }
   .audience-panel { padding: 16px; }
   .persona-card { padding: 16px; }
   .package-card, .retainer-mini { padding: 16px; }
+}
+
+/* ============================================================
+   Áreas de práctica: acordeón de secciones y subsecciones.
+   Cada área del derecho se despliega y, dentro, cada subsección.
+   ============================================================ */
+.pa-group { padding: 0; margin: 0 0 12px; border: 1px solid var(--line); border-bottom: 1px solid var(--line); background: #fff; }
+.pa-summary { display: flex; align-items: center; gap: 14px; padding: 16px 20px; cursor: pointer; list-style: none; user-select: none; transition: background .18s ease; }
+.pa-summary::-webkit-details-marker { display: none; }
+.pa-summary:hover { background: var(--light); }
+.pa-summary:focus-visible { outline: 2px solid #537d9f; outline-offset: -2px; }
+.pa-head { display: flex; flex: 1; min-width: 0; flex-direction: column; gap: 3px; }
+.pa-title { color: var(--navy); font: 500 21px/1.3 var(--serif); }
+.pa-count { flex: 0 0 auto; color: var(--slate); font-size: 10px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+.pa-chev { flex: 0 0 auto; color: #c5a572; transition: transform .3s ease; }
+.pa-details[open] > .pa-summary .pa-chev { transform: rotate(180deg); }
+.pa-body { padding: 2px 20px 20px; }
+.pa-details[open] > .pa-body { animation: pa-unfold .35s ease; }
+@keyframes pa-unfold { from { opacity: 0; transform: translateY(-8px); } to { opacity: 1; transform: none; } }
+.pa-subsections { display: grid; gap: 10px; margin-top: 14px; }
+.pa-level2 { border: 1px solid var(--line); border-left: 3px solid #c5a572; background: var(--light); }
+.pa-sub-summary { padding: 12px 16px; }
+.pa-sub-summary .pa-title { font: 650 15px/1.35 var(--sans); }
+.pa-level2 > .pa-body { padding: 2px 16px 16px; }
+.pa-intro { margin: 0 0 10px; color: #4b545c; font-size: 12px; line-height: 1.7; }
+.pa-services { display: grid; gap: 3px; margin: 0; padding: 0; list-style: none; }
+.pa-services li a { display: block; padding: 9px 12px; border: 1px solid var(--line); background: #fff; text-decoration: none; transition: border-color .15s ease, background .15s ease; }
+.pa-services li a:hover { border-color: var(--navy-mid); background: #fbfcfd; }
+.pa-svc-title { display: block; color: var(--navy); font-size: 12.5px; font-weight: 650; }
+.pa-services small { display: block; margin-top: 2px; color: var(--slate); font-size: 10.5px; line-height: 1.55; }
+.pa-more { display: inline-block; margin-top: 12px; color: var(--navy-mid); font-size: 11px; font-weight: 700; text-decoration: none; }
+.pa-more:hover { text-decoration: underline; text-underline-offset: 3px; }
+@media (max-width: 560px) {
+  .pa-summary { flex-wrap: wrap; padding: 14px 15px; }
+  .pa-title { font-size: 18px; }
+  .pa-count { order: 3; width: 100%; margin-top: 2px; }
+  .pa-body { padding: 2px 15px 16px; }
+}
+
+/* ============================================================
+   Optimización de navegación: menú sticky en escritorio, CTA de
+   contacto, migas de pan, volver arriba e índice de portada móvil.
+   ============================================================ */
+
+/* El menú principal queda fijo al hacer scroll en escritorio (en móvil ya es fixed). */
+@media (min-width: 861px) {
+  .site-nav { position: sticky; top: 0; }
+}
+
+/* Contacto como acción destacada: acento dorado dentro de la regla 60·30·10. */
+.nav-cta { margin: 7px 0 7px 10px; padding: 0 16px !important; min-height: 0; align-self: center; border-radius: 2px; background: #c5a572; color: #0d1b2a !important; font-weight: 700; }
+.nav-cta:hover, .nav-cta:focus-visible, .nav-cta[aria-current="page"] { background: #d3b487 !important; color: #0d1b2a !important; }
+
+/* Migas de pan para orientación en páginas internas. */
+.breadcrumb-trail { padding: 12px 45px 0; }
+.breadcrumb-trail ol { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.breadcrumb-trail li { display: flex; align-items: center; gap: 4px; color: var(--slate); font-size: 10.5px; font-weight: 600; }
+.breadcrumb-trail li + li::before { content: "›"; color: #b3bcc3; font-weight: 400; }
+.breadcrumb-trail a { color: var(--navy-mid); text-decoration: none; }
+.breadcrumb-trail a:hover, .breadcrumb-trail a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+.breadcrumb-trail li[aria-current="page"] { color: var(--navy); font-weight: 700; }
+
+/* Volver arriba, situado sobre el botón flotante de WhatsApp. */
+.back-to-top { position: fixed; z-index: 55; right: 20px; bottom: 78px; display: grid; place-items: center; width: 48px; height: 48px; border: 2px solid #fff; border-radius: 50%; background: #c5a572; color: #0d1b2a; box-shadow: 0 4px 16px #0d1b2a4d; transition: transform .18s ease, background .18s ease; }
+.back-to-top:hover { background: #d3b487; transform: translateY(-2px); }
+
+/* Índice de la portada: en móvil se vuelve una fila de fichas desplazable
+   para saltar de sección sin recorrer toda la página. */
+@media (max-width: 760px) {
+  .home-toc ul { display: flex; flex-wrap: nowrap; gap: 7px; margin: 0; padding: 0 0 6px; list-style: none; overflow-x: auto; scrollbar-width: thin; }
+  .home-toc li { flex: 0 0 auto; margin: 0; padding: 0; }
+  .home-toc li a { display: block; padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px; background: #fff; white-space: nowrap; font-size: 11px; }
+  .home-toc .legal-precision { display: none; }
+}
+
+@media (max-width: 860px) {
+  .nav-cta { margin: 8px 9px; padding: 0 14px !important; min-height: 40px; align-self: stretch; justify-content: center; border-bottom: 0 !important; }
+  .breadcrumb-trail { padding: 12px 24px 0; }
+  .back-to-top { right: 13px; bottom: 70px; width: 46px; height: 46px; }
+}
+@media (max-width: 560px) {
+  .breadcrumb-trail { padding: 10px 23px 0; }
 }
