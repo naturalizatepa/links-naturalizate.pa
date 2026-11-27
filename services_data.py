@@ -1,0 +1,305 @@
+"""Practice-area catalog adapted from Kery Cruz's public navigation.
+
+The client confirmed that every listed area can be presented as a service of the
+Alfonso Villarreal practice. Descriptions are newly written, not copied from the
+reference. The scope of each engagement is defined after an individual review.
+
+Cada servicio declara a quién ayuda (`persona`). Ese perfil es la base del
+contenido de las páginas de área: no se describe el trámite en abstracto, sino
+la situación concreta de quien lo necesita.
+"""
+
+
+def service(slug, title, description, persona):
+    return {
+        "slug": slug,
+        "title": title,
+        "description": description,
+        "persona": persona,
+    }
+
+
+CATEGORIES = [
+    {
+        "slug": "sociedades",
+        "title": "Sociedades y fundaciones",
+        "number": "I.",
+        "intro": "Constitución, organización y cierre de estructuras jurídicas en Panamá. La forma apropiada depende del propósito, la operación y los documentos disponibles.",
+        "audience": "Ayudamos a quien tiene que decidir con qué estructura jurídica opera: el emprendedor que constituye su primera sociedad, la familia que ordena su patrimonio y el administrador que debe cumplir obligaciones societarias sin exponer a los socios.",
+        "signals": [
+            "La sociedad existe, pero los nombramientos no están inscritos o no coinciden con la realidad.",
+            "Se acerca el tributo anual y no hay claridad sobre qué documento falta.",
+            "Los socios discuten quién firma, quién decide y quién responde.",
+        ],
+        "services": [
+            service("formacion-sociedades", "Formación y manejo de sociedades y fundaciones", "Estructuración inicial, documentación corporativa y revisión de las obligaciones vinculadas a la entidad.", "Emprendedores y grupos familiares que constituyen su primera sociedad o fundación en Panamá y no quieren improvisar el pacto social."),
+            service("sociedad-responsabilidad-limitada", "Sociedad de responsabilidad limitada", "Asesoría sobre su constitución, reglas de funcionamiento y documentación societaria.", "Socios que buscan limitar su responsabilidad patrimonial sin perder control sobre las decisiones del negocio."),
+            service("disolucion-sociedades", "Disolución de sociedades", "Revisión de la situación de la entidad y coordinación de los actos necesarios para su cierre.", "Dueños de entidades inactivas, en conflicto o sin operación que necesitan cerrarlas sin dejar pasivos ni obligaciones abiertas."),
+            service("fundaciones-interes-privado", "Fundaciones de interés privado", "Constitución y revisión de documentos de fundaciones según el objetivo patrimonial.", "Familias con bienes en Panamá que quieren separar la tenencia patrimonial de la operación comercial y ordenar su transmisión."),
+            service("agente-residente", "Agente residente y representación corporativa", "Evaluación del nombramiento y de las obligaciones de agente residente, representante legal, directores o dignatarios.", "Sociedades locales o extranjeras que deben mantener agente residente y dignatarios vigentes para no perder su capacidad de actuar."),
+            service("cambios-corporativos", "Cambios de nombre y de nombramientos", "Documentación de modificaciones de nombre, cargos, representantes y órganos de una entidad.", "Entidades que cambian de nombre, de directores o de representante legal y necesitan que el cambio conste frente a bancos y terceros."),
+            service("certificaciones-traducciones", "Certificaciones societarias y traducciones", "Solicitud y revisión de certificaciones corporativas y coordinación de traducciones certificadas cuando correspondan.", "Clientes que deben acreditar la existencia, los poderes o el estado de una entidad ante un banco, una autoridad o una contraparte extranjera."),
+            service("actas-corporativas", "Actas de junta y accionistas", "Preparación y revisión de actas y decisiones de órganos corporativos.", "Juntas directivas y accionistas que necesitan documentar una decisión de forma válida y ejecutable, no solo para el archivo."),
+            service("apertura-cuenta", "Apertura de cuentas bancarias para entidades", "Organización de la documentación corporativa para una gestión bancaria, sujeta a evaluación de la entidad financiera.", "Empresas nuevas o recién reestructuradas que necesitan presentar un expediente bancario coherente y evitar rechazos por documentación."),
+            service("tributo-anual-sociedades", "Gestión documental del tributo anual de entidades", "Revisión de obligaciones y coordinación de documentos de pago con asesoría contable cuando sea necesaria.", "Administradores de sociedades y fundaciones que deben cumplir el tributo anual a tiempo y con el soporte correcto."),
+        ],
+    },
+    {
+        "slug": "litigios",
+        "title": "Procesos civiles, penales y controversias",
+        "number": "II.",
+        "intro": "Análisis de conflictos y diseño de una ruta de negociación o proceso judicial cuando corresponda. No toda diferencia requiere una demanda.",
+        "audience": "Ayudamos a quien ya tiene un conflicto y debe decidir cómo responder: la persona que recibió una demanda, el acreedor que no logra cobrar y la empresa que prefiere negociar antes de litigar. Primero se mide el costo y la probabilidad; después se elige la vía.",
+        "signals": [
+            "Recibió una notificación, citación o demanda y el plazo corre.",
+            "La contraparte dejó de responder o incumplió un acuerdo de pago.",
+            "El conflicto ya afecta la operación, la caja o la reputación.",
+        ],
+        "services": [
+            service("procesos-civiles", "Procesos civiles", "Evaluación de hechos, pruebas y alternativas procesales para una controversia civil.", "Personas y empresas con una controversia civil que deben decidir si demandan, se defienden o buscan un acuerdo."),
+            service("resolucion-disputas", "Litigio y resolución de disputas", "Estrategia de negociación y representación según el estado y la naturaleza del conflicto.", "Partes enfrentadas por un contrato o un incumplimiento que quieren una salida proporcional antes de un proceso largo."),
+            service("recuperacion-activos", "Recuperación de dinero y activos", "Revisión de documentación y vías de cobro o recuperación antes de asumir una gestión.", "Acreedores, propietarios y socios que necesitan recuperar dinero, un inmueble o un bien entregado sin respaldo."),
+            service("reclamos-bancarios", "Reclamos bancarios", "Análisis de contratos, movimientos y comunicaciones para definir la estrategia de reclamación.", "Clientes con cargos no reconocidos, transferencias fallidas, cuentas bloqueadas o respuestas bancarias insuficientes."),
+            service("fraude-electronico", "Fraude electrónico", "Ordenamiento de evidencia y evaluación de medidas legales relacionadas con operaciones no autorizadas.", "Víctimas de fraude digital que necesitan asegurar evidencia rápido y evaluar reclamaciones y denuncias."),
+            service("procesos-penales", "Procesos penales", "Evaluación de hechos y documentación para definir el alcance de una posible representación penal.", "Personas investigadas, imputadas o víctimas de un delito que necesitan entender su posición antes de declarar o actuar."),
+        ],
+    },
+    {
+        "slug": "patrimonio",
+        "title": "Protección de activos y planificación patrimonial",
+        "number": "III.",
+        "intro": "Organización jurídica del patrimonio, sucesiones y decisiones de transmisión de bienes con enfoque preventivo.",
+        "audience": "Ayudamos a familias y propietarios que quieren que sus bienes lleguen a quien corresponde, sin pleitos ni bloqueos. Se trabaja con documentos y decisiones en vida, no con promesas de última hora.",
+        "signals": [
+            "Hay bienes en Panamá y herederos en otro país.",
+            "Un familiar depende de decisiones que nadie ha documentado.",
+            "Existe un testamento antiguo o contradictorio.",
+        ],
+        "services": [
+            service("proteccion-activos", "Protección de activos", "Revisión de titularidades, riesgos documentales y estructuras permitidas según el caso.", "Familias y empresarios que quieren separar el riesgo personal del riesgo del negocio y proteger lo que ya construyeron."),
+            service("planificacion-patrimonial", "Planificación patrimonial", "Diseño de documentos y decisiones para ordenar la transmisión y administración del patrimonio.", "Personas con bienes en varios países y herederos en distintas jurisdicciones que necesitan un plan coherente."),
+            service("sucesion-testada", "Sucesión testada", "Asesoría en la tramitación de una sucesión cuando existe un testamento.", "Herederos, albaceas o testadores que deben ejecutar un testamento sin conflictos entre los llamados."),
+            service("testamentos", "Testamentos", "Orientación sobre la preparación, formalidades y efectos de disposiciones testamentarias.", "Personas que quieren dejar instrucciones claras y evitar que su familia discuta el reparto de sus bienes."),
+        ],
+    },
+    {
+        "slug": "empresas",
+        "title": "Registro y gestión de empresas",
+        "number": "IV.",
+        "intro": "Acompañamiento documental para iniciar, actualizar o cerrar una operación comercial y prevenir conflictos contractuales.",
+        "audience": "Ayudamos a quien administra un negocio y necesita cumplir sin frenar la operación: el dueño que abre, la gerente que firma contratos y el equipo que debe responder ante una autoridad.",
+        "signals": [
+            "Se firmó un contrato sin revisar salida, garantías o penalidades.",
+            "La licencia, el aviso de operaciones o el registro está vencido.",
+            "Nadie sabe quién firma válidamente por la empresa.",
+        ],
+        "services": [
+            service("registro-empresas", "Registro de empresas", "Revisión de la estructura y de los documentos requeridos para formalizar una actividad empresarial.", "Emprendedores que formalizan su actividad por primera vez y necesitan una estructura que aguante crecimiento y socios."),
+            service("aviso-operaciones", "Aviso de operaciones", "Asesoría sobre el trámite y los datos que deben verificarse antes de solicitar un aviso.", "Negocios que inician operaciones y deben cumplir con el aviso de operaciones sin observaciones."),
+            service("cierre-negocios-municipio", "Cierre de negocios en el municipio", "Coordinación de la documentación y gestiones vinculadas al cierre municipal.", "Comercios que cesan actividades y necesitan cerrar formalmente para no seguir acumulando obligaciones."),
+            service("contratos-negociacion", "Contratos y negociación", "Revisión y negociación de acuerdos comerciales con atención a riesgos y obligaciones.", "Empresas que están por firmar un acuerdo relevante y quieren saber qué asumen y cómo salir si falla."),
+            service("auditoria-contractual", "Auditoría contractual y prevención", "Identificación de cláusulas sensibles y oportunidades de mejora antes de que surja una disputa.", "Gerentes y dueños con contratos antiguos, dispersos o copiados de otra empresa que necesitan ordenarlos antes de un conflicto."),
+            service("consultas-legales", "Consultas legales orales o escritas", "Orientación inicial sobre hechos, documentos y opciones, incluida consulta por escrito o correo.", "Personas o empresas con una duda puntual que necesitan una respuesta fundada antes de tomar una decisión."),
+            service("cartas-notas", "Cartas, notas y documentos breves", "Redacción de comunicaciones y documentos de alcance acotado según su finalidad.", "Clientes que necesitan una comunicación formal con respaldo legal para dejar constancia o exigir un cumplimiento."),
+            service("contratos-trabajo", "Contratos de trabajo", "Redacción o revisión del acuerdo laboral y de las obligaciones relevantes.", "Empleadores y trabajadores que formalizan una relación laboral y quieren evitar reclamos por condiciones mal documentadas."),
+            service("contratos-servicios", "Contratos de servicios independientes", "Revisión de entregables, responsabilidades y terminación de relaciones con contratistas.", "Empresas que contratan proveedores o consultores externos y necesitan fijar entregables, propiedad y salida."),
+            service("contratos-prestamo", "Contratos de préstamo", "Preparación y revisión de condiciones, garantías y documentación del acuerdo.", "Prestamistas y prestatarios que documentan un préstamo entre particulares o empresas y necesitan garantías exigibles."),
+            service("poderes", "Poderes generales y especiales", "Redacción de autorizaciones y poderes conforme al acto y la representación requerida.", "Personas que actúan desde el exterior o delegan la firma y necesitan un poder aceptado por bancos o registros."),
+            service("reglamentos", "Reglamentos de fundaciones y de trabajo", "Revisión de reglas internas y documentos de funcionamiento según la entidad.", "Fundaciones y empresas que necesitan reglas internas claras para que las decisiones no dependan de interpretaciones."),
+            service("licencia-comercial", "Licencia comercial: obtención y corrección", "Análisis documental de la licencia comercial y de las modificaciones que correspondan.", "Negocios con licencia pendiente, observada o desactualizada que no pueden operar o facturar con normalidad."),
+            service("apostillas-notarias", "Apostillas y protocolización notarial", "Coordinación documental de apostillas, notarizaciones y autenticaciones aplicables.", "Clientes que deben usar documentos panameños en el exterior, o documentos extranjeros en Panamá, sin rechazos."),
+            service("gestion-documentos", "Escaneo, envío y mensajería documental", "Apoyo en la preparación y entrega de copias y documentos vinculados al encargo jurídico.", "Clientes con trámites abiertos que necesitan orden documental, entregas puntuales y constancia de lo presentado."),
+        ],
+    },
+    {
+        "slug": "propiedad-intelectual",
+        "title": "Propiedad intelectual y registros sanitarios",
+        "number": "V.",
+        "intro": "Trámites de marca y consultas documentales para registros regulados. Los requisitos técnicos y sectoriales se confirman en cada expediente.",
+        "audience": "Ayudamos a quien pone un nombre, una fórmula o un producto en el mercado: la marca que teme ser copiada y la empresa regulada que no puede vender sin registro.",
+        "signals": [
+            "Lanzará una marca y nadie verificó si ya está registrada.",
+            "El registro sanitario venció o cambió la fórmula o el fabricante.",
+            "Un competidor usa un nombre o empaque similar.",
+        ],
+        "services": [
+            service("registro-marcas", "Registro de marcas", "Búsqueda preliminar, estrategia de presentación y seguimiento del trámite de marca.", "Emprendedores y empresas que están lanzando una marca y quieren protegerla antes de invertir en empaque y publicidad."),
+            service("registro-cosmeticos", "Registro sanitario de cosméticos", "Organización de requisitos documentales para productos cosméticos.", "Marcas de belleza y cuidado personal que necesitan vender cosméticos formalmente en Panamá."),
+            service("registro-dispositivos-medicos", "Registro sanitario de dispositivos médicos", "Revisión de la clasificación y el expediente documental aplicable.", "Importadores y fabricantes de equipos médicos que necesitan clasificar correctamente el producto antes de registrarlo."),
+            service("registro-medicamentos", "Registro sanitario de medicamentos", "Coordinación jurídica del expediente y de las gestiones regulatorias que correspondan.", "Laboratorios y distribuidores que registran medicamentos y enfrentan exigencias técnicas y plazos regulatorios."),
+            service("registro-limpieza", "Registro sanitario de productos de limpieza", "Preparación de la documentación exigible según la categoría del producto.", "Fabricantes e importadores de productos de limpieza que necesitan registro para abastecer comercios e instituciones."),
+            service("registro-radiofarmacos", "Registro sanitario de radiofármacos", "Análisis del alcance regulatorio y coordinación de requisitos especializados.", "Empresas con productos radiofármacos que requieren un expediente coordinado con exigencias especializadas."),
+            service("registro-alimentos", "Registro sanitario de alimentos", "Revisión de documentos del producto y del procedimiento que corresponda.", "Productores e importadores de alimentos que necesitan registro sanitario para vender en el mercado formal."),
+            service("renovacion-registros", "Renovación de marcas y registros sanitarios", "Revisión de vigencias y documentos de renovación según el tipo de registro.", "Titulares con marcas o registros próximos a vencer que no pueden permitir una interrupción de ventas o protección."),
+            service("cambios-regulatorios-producto", "Cambios de nombre, fórmula, fabricante o titular", "Evaluación de modificaciones de productos o titulares ante la entidad que corresponda.", "Empresas que modifican fórmula, fabricante, nombre o titular y necesitan que el registro siga vigente."),
+            service("licencias-operacion-producto", "Licencias de operación vinculadas a productos", "Revisión documental de solicitudes de licencia para actividades reguladas.", "Negocios regulados que necesitan licencia de operación para fabricar, importar o distribuir."),
+        ],
+    },
+    {
+        "slug": "bienes-raices",
+        "title": "Bienes raíces y operaciones inmobiliarias",
+        "number": "VI.",
+        "intro": "Revisión legal de compraventas inmobiliarias para personas y entidades, residentes o no residentes. Esta página no anuncia propiedades en venta.",
+        "audience": "Ayudamos a quien está por comprometer dinero en un inmueble: el comprador que firma una promesa, el vendedor que debe demostrar que puede vender y la familia que hereda una propiedad con cargas.",
+        "signals": [
+            "Le pidieron firmar una promesa y pagar un anticipo esta semana.",
+            "El título, las mejoras o los gravámenes no están claros.",
+            "Quien vende es una sociedad y no sabe si puede obligarla.",
+        ],
+        "services": [
+            service("venta-personas-juridicas", "Venta de bienes raíces de personas jurídicas", "Revisión de la titularidad, facultades de representación y documentación de la operación.", "Sociedades propietarias que venden un inmueble y deben acreditar que quien firma tiene facultades vigentes."),
+            service("venta-extranjeros-no-residentes", "Venta de bienes raíces de extranjeros no residentes", "Identificación de pasos documentales y coordinación legal de la venta.", "Propietarios no residentes que venden desde el exterior y no pueden estar presentes en cada firma."),
+            service("venta-extranjeros-residentes", "Venta de bienes raíces de extranjeros residentes", "Acompañamiento en la revisión del inmueble y de los documentos de transmisión.", "Extranjeros residentes que venden su inmueble en Panamá y quieren cerrar sin contingencias fiscales o registrales."),
+            service("compra-personas-juridicas", "Compra de inmuebles por personas jurídicas", "Evaluación documental previa y estructuración jurídica de la adquisición.", "Empresas que adquieren inmuebles para operar, invertir o garantizar una obligación."),
+            service("compra-titulo-personal", "Compra de inmuebles a título personal", "Revisión del contrato y de la documentación para una compra individual.", "Compradores individuales, primer inmueble o inversión, que necesitan saber qué compran antes de pagar."),
+            service("busqueda-registral", "Búsquedas registrales de inmuebles y sociedades", "Consulta de titularidad y antecedentes documentales relevantes para la operación.", "Compradores, bancos y abogados que necesitan verificar titularidad, cargas y antecedentes antes de cerrar."),
+            service("promesas-compraventa", "Promesas y contratos finales de compraventa", "Redacción o revisión de condiciones antes de firmar y cerrar la transmisión.", "Partes que negocian una promesa y necesitan claridad sobre anticipos, plazos, condiciones y consecuencias del incumplimiento."),
+            service("liberacion-gravamenes", "Liberación de gravámenes y mejoras", "Revisión de cargas y declaraciones de mejoras vinculadas con el inmueble.", "Propietarios con hipotecas, embargos o mejoras no declaradas que impiden vender o refinanciar."),
+            service("impuestos-transmision", "Coordinación de impuestos de transferencia y ganancia", "Revisión de soportes y coordinación con profesionales contables cuando corresponda; no sustituye asesoría fiscal.", "Compradores y vendedores que necesitan ordenar los tributos de la operación y evitar recargos al inscribir."),
+            service("paz-salvos-inmuebles", "Paz y salvos y certificados de propiedad", "Obtención y comprobación de certificaciones necesarias para una operación.", "Partes que deben acreditar que el inmueble está al día antes de firmar o desembolsar."),
+            service("escrituras-registro", "Escrituras, notaría y Registro Público", "Preparación y seguimiento de documentos para formalizar la transmisión.", "Clientes que ya acordaron la compraventa y necesitan que la escritura se inscriba sin observaciones."),
+            service("actualizacion-catastral", "Actualización catastral y tributos del inmueble", "Coordinación documental de actualizaciones y pagos con verificación de la obligación aplicable.", "Propietarios con datos catastrales desactualizados o tributos pendientes que bloquean una operación."),
+            service("identificacion-contribuyente", "Identificación tributaria del inmueble", "Orientación documental para los identificadores de contribuyente relacionados con la propiedad.", "Nuevos propietarios que deben regularizar la identificación tributaria del inmueble."),
+            service("adjudicacion-terrenos", "Solicitudes de adjudicación de terrenos", "Revisión de antecedentes y documentación previa a una solicitud de adjudicación.", "Personas con posesión o interés en tierras estatales que necesitan ordenar antecedentes antes de solicitar."),
+            service("registro-avaluos", "Registro de avalúos", "Coordinación de documentos y seguimiento de la inscripción de avalúos cuando proceda.", "Propietarios que necesitan inscribir el avalúo para una venta, un crédito o un trámite municipal."),
+            service("mensajeria-inmobiliaria", "Mensajería de documentos inmobiliarios", "Gestión de entrega documental vinculada con una compraventa o trámite registral.", "Clientes con cierres fuera de la ciudad que necesitan entregas documentales puntuales y con constancia."),
+            service("revision-contrato-venta", "Revisión de contratos de venta", "Análisis de cláusulas, obligaciones y anexos antes de la firma de un contrato inmobiliario.", "Compradores que reciben un contrato para firmar y quieren detectar riesgos, vacíos y obligaciones ocultas."),
+        ],
+    },
+    {
+        "slug": "familia",
+        "title": "Derecho de familia y sucesiones",
+        "number": "VII.",
+        "intro": "Orientación en asuntos familiares y patrimoniales que requieren tratamiento cuidadoso y reserva profesional.",
+        "audience": "Ayudamos a padres, cónyuges y herederos que deben tomar decisiones difíciles sin romper lo que queda de la familia. Se privilegia el acuerdo documentado y, cuando no es posible, una ruta procesal clara.",
+        "signals": [
+            "Hay menores involucrados y las decisiones se están tomando sin acuerdo.",
+            "Un familiar falleció y los bienes están a nombre de una sola persona.",
+            "Existe conflicto por custodia, pensión o salida del país de un menor.",
+        ],
+        "services": [
+            service("patria-potestad", "Patria potestad", "Análisis de la situación familiar y de las vías legales relacionadas con el ejercicio de derechos y deberes parentales.", "Padres y madres en desacuerdo sobre custodia, permisos, viajes o decisiones de salud y educación de sus hijos."),
+            service("asuntos-familia", "Asuntos de derecho de familia", "Revisión individual de documentos, necesidades y opciones jurídicas disponibles.", "Personas con conflictos familiares que necesitan una salida ordenada y reservada, sin escalar innecesariamente."),
+            service("sucesiones-familia", "Sucesiones familiares", "Coordinación de los aspectos familiares y patrimoniales en procesos sucesorios.", "Familias que deben repartir bienes tras un fallecimiento y quieren evitar que el duelo se convierta en litigio."),
+        ],
+    },
+    {
+        "slug": "migracion",
+        "title": "Trámites migratorios y nacionalidad",
+        "number": "VIII.",
+        "intro": "Orientación y gestión de distintas rutas migratorias y de nacionalidad. La procedencia depende de la situación y de los requisitos vigentes.",
+        "audience": "Ayudamos a quien quiere establecerse, reunirse con su familia o nacionalizarse: el profesional que recibe una oferta, el jubilado que busca residencia y el residente que ya cumplió años en Panamá.",
+        "signals": [
+            "El permiso vence pronto y no hay cita disponible.",
+            "La solicitud anterior fue negada o quedó suspendida.",
+            "La documentación del país de origen no cumple el formato exigido.",
+        ],
+        "services": [
+            service("paises-amigos", "Permiso por Países Amigos", "Evaluación de la nacionalidad, la documentación y el fundamento aplicable a esta vía.", "Nacionales de países con convenio que buscan residencia permanente y quieren confirmar si su caso califica."),
+            service("jubilados", "Permiso de jubilados en Panamá", "Revisión de ingresos, documentos y condiciones correspondientes a una solicitud de jubilación.", "Pensionados que quieren residir en Panamá y necesitan acreditar ingresos y documentos de forma aceptable."),
+            service("inversionista-calificado", "Visa de inversionista calificado", "Análisis de la documentación de inversión y de los requisitos administrativos pertinentes.", "Inversionistas con capital destinado a un inmueble o proyecto que buscan residencia y necesitan ordenar la inversión."),
+            service("naturalizacion-panama", "Naturalización panameña", "Evaluación de residencia, arraigo y expediente; atención mediante la submarca Naturalízate.pa.", "Residentes con años de permanencia en Panamá que quieren obtener la nacionalidad y no saben si su expediente está completo."),
+            service("residente-profesional", "Residencia para profesional extranjero", "Revisión de idoneidad documental y de la vía migratoria correspondiente.", "Profesionales extranjeros con una oferta de trabajo o un título que quieren residir y ejercer en Panamá."),
+            service("visa-forestal", "Visa forestal", "Análisis de los soportes de inversión y de los requisitos aplicables a proyectos forestales.", "Inversionistas en proyectos forestales que necesitan evaluar la vía migratoria y sus soportes."),
+            service("visa-autorizada", "Visa autorizada", "Evaluación del fundamento y de la documentación necesaria para una solicitud de esta categoría.", "Solicitantes que podrían calificar por una categoría especial y necesitan confirmar el fundamento antes de presentar."),
+            service("casado-panamena", "Permiso por matrimonio con persona panameña", "Revisión de vínculos, estado civil y documentos requeridos para esta vía.", "Cónyuges de personas panameñas que buscan residencia y deben acreditar el vínculo y el estado civil."),
+            service("panamenos-extranjero", "Panameños nacidos en el extranjero", "Orientación sobre inscripción y documentos de nacionalidad por nacimiento.", "Personas con derecho a la nacionalidad panameña por nacimiento en el exterior que necesitan inscribirse."),
+            service("razones-economicas", "Residencia por razones económicas", "Análisis de la categoría aplicable y de sus soportes documentales.", "Personas con solvencia económica que buscan residencia y necesitan identificar la categoría que realmente les aplica."),
+            service("convenio-italia", "Residencia por convenio Panamá–Italia", "Revisión del fundamento del convenio y de los documentos del caso.", "Nacionales italianos o personas con vínculo por el convenio que necesitan evaluar requisitos y tiempos."),
+            service("etapas-migratorias", "Etapas del proceso migratorio", "Explicación del recorrido administrativo y de los hitos a seguir en cada solicitud.", "Solicitantes que necesitan entender todo el recorrido, sus tiempos y qué depende de la autoridad."),
+            service("requisitos-visas", "Requisitos comunes de visas", "Preparación de un inventario documental antes de iniciar una gestión migratoria.", "Personas que preparan su expediente desde cero y no quieren perder tiempo ni pagos por documentos incompletos."),
+            service("visas-inversion-solvencia", "Visas temporales y permanentes por inversión o solvencia", "Evaluación de la categoría migratoria y de los soportes de inversión o capacidad económica.", "Inversionistas y rentistas que comparan categorías y necesitan saber cuál sostiene su proyecto de vida."),
+            service("visa-gran-empresa", "Visas vinculadas a empresas de gran tamaño", "Revisión de documentación empresarial y fundamento migratorio de la solicitud.", "Empresas que trasladan personal clave a Panamá y necesitan coordinar la documentación corporativa y migratoria."),
+            service("prorrogas-migratorias", "Prórrogas y renovaciones migratorias", "Revisión de fechas, documentación y pasos para una extensión permitida.", "Residentes con permisos próximos a vencer que necesitan renovar sin salir del país ni perder estatus."),
+            service("rentista-dependientes", "Rentas, jubilación y dependientes", "Análisis de solicitudes de rentistas y familiares dependientes según el supuesto correspondiente.", "Rentistas y familias con dependientes que necesitan incluir a todos sin inconsistencias en el expediente."),
+            service("visa-entradas-multiples", "Visas de entradas múltiples", "Orientación documental sobre solicitudes de entradas múltiples.", "Viajeros frecuentes que necesitan entrar y salir de Panamá sin renovar permiso en cada viaje."),
+            service("recursos-migratorios", "Recursos y reconsideraciones migratorias", "Evaluación de la resolución y de las vías de impugnación que puedan proceder.", "Personas con una solicitud negada que necesitan evaluar si existe una vía útil y en qué plazo."),
+            service("estatus-cartas-identidad", "Consultas de estatus y cartas de identidad", "Seguimiento administrativo y preparación de comunicaciones documentales asociadas al expediente.", "Solicitantes que necesitan constancia de su estatus y comunicaciones formales ante la autoridad."),
+            service("correcciones-retiros", "Correcciones, retiros y cierres de expedientes", "Análisis de actuaciones para corregir, desistir o cerrar una solicitud migratoria.", "Personas con expedientes con errores o que ya no continuarán el trámite y necesitan cerrarlo correctamente."),
+        ],
+    },
+    {
+        "slug": "trabajo",
+        "title": "Permisos de trabajo en Panamá",
+        "number": "IX.",
+        "intro": "Revisión de categorías laborales y documentación de empleadores y personas solicitantes, sujeta a la normativa vigente.",
+        "audience": "Ayudamos a empleadores que necesitan cubrir un puesto con talento extranjero y a trabajadores que deben mantener su permiso vigente sin interrumpir su relación laboral.",
+        "signals": [
+            "La cuota de personal no cuadra con la plantilla real.",
+            "El permiso del colaborador vence antes de la renovación.",
+            "La autoridad observó el expediente por el cargo o las funciones.",
+        ],
+        "services": [
+            service("acuerdo-marrakech", "Permiso de trabajo bajo el Acuerdo de Marrakech", "Evaluación del supuesto aplicable y sus soportes laborales y migratorios.", "Profesionales amparados por el Acuerdo de Marrakech que necesitan confirmar el procedimiento aplicable."),
+            service("diez-anos-residencia", "Permiso por más de diez años de residencia", "Revisión del historial migratorio y de la documentación laboral que corresponda.", "Extranjeros con más de diez años de residencia que buscan regularizar su permiso de trabajo."),
+            service("requisitos-trabajo", "Requisitos comunes de permisos de trabajo", "Inventario de documentos, plazos y pasos administrativos según la categoría.", "Empleadores y trabajadores que preparan un permiso y necesitan un inventario claro antes de presentar."),
+            service("personal-especializado", "Permiso para personal especializado o técnico", "Análisis del puesto, la entidad empleadora y la categoría aplicable.", "Empresas que contratan técnicos o profesionales extranjeros y deben justificar la categoría del puesto."),
+            service("personal-ordinario", "Permiso para personal ordinario", "Revisión de la relación de trabajo y de los requisitos de la cuota pertinente.", "Empleadores que cubren puestos operativos y deben cumplir la cuota de personal ordinario."),
+            service("trabajador-confianza", "Permiso para trabajador de confianza", "Evaluación del cargo, el empleador y el sustento de esta categoría.", "Empresas que nombran gerentes o cargos de confianza y necesitan sustentar la categoría ante la autoridad."),
+            service("cuota-diez", "Permiso dentro del 10 % de personal ordinario", "Análisis de las condiciones del empleador y de la solicitud en esta cuota.", "Empleadores sujetos a la cuota de personal ordinario que necesitan verificar si el puesto encaja."),
+            service("cuota-quince", "Permiso dentro del 15 % de personal especializado", "Revisión de la categoría técnica y de los soportes de la cuota aplicable.", "Empresas con personal técnico dentro de la cuota que deben documentar funciones y proporciones."),
+            service("permiso-indefinido", "Permiso de trabajo indefinido", "Evaluación de los antecedentes y del supuesto jurídico que pudiera corresponder.", "Trabajadores extranjeros con años de relación laboral que buscan estabilidad migratoria y laboral."),
+        ],
+    },
+    {
+        "slug": "servicios-estrategicos",
+        "title": "Servicios estratégicos AV",
+        "number": "X.",
+        "intro": "Servicios adicionales documentados en el kit de marca de Alfonso Villarreal para empresas y equipos.",
+        "audience": "Ayudamos a organizaciones que necesitan criterio jurídico permanente, no solo cuando aparece un problema: gerencias sin abogado interno, equipos que crecen y administraciones que deben decidir cada semana.",
+        "signals": [
+            "Cada área contrata su propio abogado y nadie ve el riesgo completo.",
+            "Las decisiones se consultan por mensajes sueltos, sin expediente.",
+            "Se acerca una asamblea, una auditoría o una firma importante.",
+        ],
+        "services": [
+            service("departamento-externo", "Departamento jurídico externo", "Acompañamiento recurrente para revisar contratos, decisiones y riesgos antes de una contingencia.", "Pymes y grupos empresariales que necesitan asesoría recurrente sin sostener una nómina jurídica interna."),
+            service("propiedad-horizontal", "Asesoría a propiedad horizontal", "Acompañamiento jurídico a administraciones de edificios y condominios según el alcance acordado.", "Administradores y juntas directivas que necesitan el retainer legal de propiedad horizontal."),
+            service("capacitaciones-legales", "Capacitaciones legales para equipos", "Talleres por proyecto sobre prevención, contratos y otras necesidades del equipo.", "Equipos de administración, ventas o recursos humanos que necesitan formación práctica para decidir mejor."),
+            service("certificado-residencia-fiscal", "Certificados de residencia fiscal", "Revisión documental para solicitar una certificación de residencia fiscal, coordinando asesoría contable cuando sea necesaria.", "Personas y empresas que deben acreditar residencia fiscal ante otra jurisdicción o una contraparte."),
+        ],
+    },
+    {
+        "slug": "propiedad-horizontal",
+        "title": "Propiedad horizontal y comunidades",
+        "number": "XI.",
+        "intro": "Prevención legal para edificios, condominios y comunidades regidas por la Ley 284 de 2022, con las reformas puntuales de la Ley 467 de 2025 en cobro de gastos comunes. Dirigido a administradores y juntas directivas.",
+        "audience": "Ayudamos a quien responde por un edificio sin tener formación jurídica: el administrador que ejecuta acuerdos y el presidente de junta directiva que los firma. El objetivo no es ganar demandas, sino evitar que existan.",
+        "signals": [
+            "El reglamento de copropiedad es anterior a la Ley 284 y nadie lo ha revisado.",
+            "La morosidad crece y el cobro se decide caso por caso, sin criterio.",
+            "Una asamblea terminó impugnada o sin acta firmada.",
+        ],
+        "services": [
+            service("retainer-ph", "Retainer legal Reina Legal para propiedad horizontal", "Acompañamiento mensual por niveles, con auditoría inicial del caso cotizada aparte.", "Administradores y juntas directivas que quieren prevención continua y no solo reacción ante conflictos."),
+            service("reglamento-copropiedad", "Reglamento de copropiedad y adecuación a la Ley 284", "Revisión del reglamento vigente, detección de contradicciones y ruta de reforma ante la asamblea.", "Juntas directivas con reglamentos heredados que contradicen la ley y generan acuerdos impugnables."),
+            service("asambleas-convocatorias", "Convocatorias, quórum y mayorías", "Revisión de la convocatoria, el orden del día, el quórum y las mayorías aplicables a cada punto.", "Administradores que convocan asambleas y necesitan que la reunión y sus votaciones resistan revisión."),
+            service("actas-acuerdos", "Actas y ejecución de acuerdos", "Redacción y revisión de actas, seguimiento de acuerdos y constancia de su ejecución.", "Secretarios y administradores que deben documentar lo decidido y demostrar que se ejecutó."),
+            service("cobro-morosidad", "Cobro de gastos comunes y morosidad", "Estrategia de cobro, revisión de estados de cuenta y coordinación de la vía judicial cuando corresponda.", "Administraciones con morosidad creciente que necesitan un criterio uniforme y defendible de cobro."),
+            service("junta-directiva", "Junta directiva, conflictos de interés y renuncias", "Revisión de la integración del órgano, abstenciones, renuncias, sustituciones y trazabilidad de decisiones.", "Presidentes y directivos que quieren cumplir su cargo sin asumir responsabilidad personal por decisiones ajenas."),
+            service("contratos-proveedores", "Contratos con administradoras y proveedores", "Revisión de alcance, niveles de servicio, salida, penalidades y responsabilidades del contrato.", "Juntas directivas que contratan administración, seguridad o mantenimiento y necesitan poder exigir y terminar."),
+            service("conflicto-convivencia", "Conflictos de convivencia y medidas", "Análisis de ruido, mascotas, obras, uso de áreas comunes y sanciones con debido proceso.", "Administradores que reciben quejas reiteradas y deben actuar sin arbitrariedad ni exposición a reclamos."),
+            service("presupuesto-cuotas", "Presupuesto, cuotas y fondo de reserva", "Revisión de la base de cálculo de cuotas, fondo de imprevistos y decisiones de gasto extraordinario.", "Tesoreros y administradores que deben explicar aumentos de cuota y el uso de reservas ante los propietarios."),
+            service("auditoria-legal-ph", "Auditoría legal del PH", "Diagnóstico documental del edificio: reglamento, actas, contratos, morosidad, seguros y riesgos de la junta.", "Juntas directivas nuevas o salientes que necesitan saber, con documento en mano, en qué estado reciben o entregan el edificio."),
+            service("defensa-sanciones", "Defensa ante sanciones e impugnaciones", "Evaluación de sanciones a propietarios, impugnaciones de acuerdos y actuaciones ante la autoridad.", "Administraciones y directivos cuestionados por una sanción, una multa o un acuerdo impugnado."),
+        ],
+    },
+]
+
+CATEGORY_BY_SLUG = {category["slug"]: category for category in CATEGORIES}
+ALL_SERVICES = [(category, item) for category in CATEGORIES for item in category["services"]]
+
+# Nueve ramas clásicas, más propiedad horizontal como práctica diferenciada.
+LEGAL_GROUPS = [
+    {"slug": "derecho-corporativo", "title": "Derecho corporativo y comercial", "number": "I.", "categories": ["sociedades", "empresas"], "intro": "Entidades, actividad empresarial, contratos y documentación corporativa."},
+    {"slug": "litigios-procesos", "title": "Litigios y derecho procesal", "number": "II.", "categories": ["litigios"], "intro": "Procesos civiles y penales, negociación, cobro y controversias."},
+    {"slug": "derecho-patrimonial", "title": "Derecho patrimonial y sucesorio", "number": "III.", "categories": ["patrimonio"], "intro": "Protección de activos, planificación y sucesiones."},
+    {"slug": "propiedad-regulacion", "title": "Propiedad intelectual y regulación", "number": "IV.", "categories": ["propiedad-intelectual"], "intro": "Marcas, registros sanitarios y cambios regulatorios de productos."},
+    {"slug": "derecho-inmobiliario", "title": "Derecho inmobiliario", "number": "V.", "categories": ["bienes-raices"], "intro": "Compraventas, títulos, escrituras y trámites documentales de inmuebles."},
+    {"slug": "derecho-familia", "title": "Derecho de familia", "number": "VI.", "categories": ["familia"], "intro": "Patria potestad, asuntos familiares y sucesiones."},
+    {"slug": "derecho-migratorio", "title": "Derecho migratorio y nacionalidad", "number": "VII.", "categories": ["migracion"], "intro": "Residencias, visas, naturalización y gestiones ante autoridades."},
+    {"slug": "derecho-laboral", "title": "Derecho laboral y permisos de trabajo", "number": "VIII.", "categories": ["trabajo"], "intro": "Categorías de permisos laborales y documentación del empleador."},
+    {"slug": "asesoria-empresarial", "title": "Asesoría jurídica empresarial", "number": "IX.", "categories": ["servicios-estrategicos"], "intro": "Departamento jurídico externo, capacitaciones y servicios de apoyo."},
+    {"slug": "propiedad-horizontal-comunidades", "title": "Propiedad horizontal y comunidades", "number": "X.", "categories": ["propiedad-horizontal"], "intro": "Retainer legal, prevención y gobierno de edificios y condominios."},
+]
+GROUP_BY_CATEGORY = {slug: group for group in LEGAL_GROUPS for slug in group["categories"]}
