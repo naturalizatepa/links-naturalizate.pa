@@ -39,6 +39,27 @@ def sidebar(title="Áreas de práctica", exclude=None):
       </aside>'''
 
 
+def home_toc():
+    """Índice real de la portada: enlaces a las secciones de esta misma página
+    (antes el bloque «En esta página» apuntaba a las áreas de práctica)."""
+    links = [
+        ("#puertas", "Persona o empresa"),
+        ("#areas", "Áreas de práctica"),
+        ("#retainer-ph", "Retainer propiedad horizontal"),
+        ("#metodo", "Cómo trabajamos"),
+        ("#perfil", "El despacho"),
+        ("#preguntas", "Preguntas frecuentes"),
+        ("#calificacion", "Prepare su consulta"),
+        ("#contacto", "Contacto"),
+    ]
+    items = "\n".join(f'<li><a href="{href}">{escape(label)}</a></li>' for href, label in links)
+    return f'''<aside class="related-sidebar home-toc" aria-label="En esta página">
+        <h2>En esta página</h2>
+        <ul>{items}</ul>
+        <div class="legal-precision"><p>El primer contacto y la orientación inicial son gratuitos.</p><a class="text-action" href="contacto.html">Solicitar una conversación →</a></div>
+      </aside>'''
+
+
 def category_options():
     return "\n".join(
         f'<option value="{escape(cat["slug"])}">{escape(cat["title"])}</option>' for cat in CATEGORIES
@@ -111,7 +132,7 @@ def home():
           <p class="signature"><strong>Lic. Alfonso Villarreal</strong><br />Abogado · Idoneidad No. 25795</p>
         </div>
       </article>
-      {sidebar("En esta página")}
+      {home_toc()}
     </div>
     <section class="home-band alt" id="puertas">
       <div class="band-head"><span class="eyebrow">Dos puertas de entrada claras</span><h2>Elija por dónde empieza: <em>persona</em> o <em>empresa</em></h2><p>El mismo estándar de revisión, con un alcance distinto según quien consulta. En ambos casos la propuesta se entrega por escrito.</p></div>
@@ -280,7 +301,6 @@ def category_page(category):
     return f'''<div class="content-columns">
       <article class="article-main">
         <div class="page-heading">
-      <a class="breadcrumb" href="areas-de-practica.html#{group['slug']}">← {escape(group['title'])}</a>
       <span class="eyebrow">{category['number']} · Área de práctica</span>
       <h1>{escape(category['title'])}</h1>
       <p>{escape(category['intro'])}</p>

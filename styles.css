@@ -65,7 +65,7 @@ button { cursor: pointer; }
 .site-nav { position: relative; z-index: 60; background: var(--navy); color: #fff; }
 .nav-inner { height: 50px; }
 .nav-links { display: flex; height: 100%; align-items: stretch; justify-content: space-between; }
-.nav-link { display: flex; align-items: center; min-height: 50px; padding: 0 10px; color: #fff; white-space: nowrap; text-decoration: none; font-size: 11px; font-weight: 500; transition: background .18s ease; }
+.nav-link { display: flex; align-items: center; min-height: 50px; padding: 0 14px; color: #fff; white-space: nowrap; text-decoration: none; font-size: 12px; font-weight: 500; transition: background .18s ease; }
 .nav-link:hover, .nav-link:focus-visible, .nav-link[aria-current="page"], .nav-item:hover > .nav-link, .nav-item.is-open > .nav-link { background: var(--navy-mid); }
 .nav-item { display: flex; position: relative; align-items: stretch; }
 .nav-item > .nav-link { padding-right: 2px; }
@@ -663,4 +663,49 @@ button { cursor: pointer; }
   .pa-title { font-size: 18px; }
   .pa-count { order: 3; width: 100%; margin-top: 2px; }
   .pa-body { padding: 2px 15px 16px; }
+}
+
+/* ============================================================
+   Optimización de navegación: menú sticky en escritorio, CTA de
+   contacto, migas de pan, volver arriba e índice de portada móvil.
+   ============================================================ */
+
+/* El menú principal queda fijo al hacer scroll en escritorio (en móvil ya es fixed). */
+@media (min-width: 861px) {
+  .site-nav { position: sticky; top: 0; }
+}
+
+/* Contacto como acción destacada: acento dorado dentro de la regla 60·30·10. */
+.nav-cta { margin: 7px 0 7px 10px; padding: 0 16px !important; min-height: 0; align-self: center; border-radius: 2px; background: #c5a572; color: #0d1b2a !important; font-weight: 700; }
+.nav-cta:hover, .nav-cta:focus-visible, .nav-cta[aria-current="page"] { background: #d3b487 !important; color: #0d1b2a !important; }
+
+/* Migas de pan para orientación en páginas internas. */
+.breadcrumb-trail { padding: 12px 45px 0; }
+.breadcrumb-trail ol { display: flex; flex-wrap: wrap; align-items: center; gap: 4px; margin: 0; padding: 0; list-style: none; }
+.breadcrumb-trail li { display: flex; align-items: center; gap: 4px; color: var(--slate); font-size: 10.5px; font-weight: 600; }
+.breadcrumb-trail li + li::before { content: "›"; color: #b3bcc3; font-weight: 400; }
+.breadcrumb-trail a { color: var(--navy-mid); text-decoration: none; }
+.breadcrumb-trail a:hover, .breadcrumb-trail a:focus-visible { text-decoration: underline; text-underline-offset: 3px; }
+.breadcrumb-trail li[aria-current="page"] { color: var(--navy); font-weight: 700; }
+
+/* Volver arriba, situado sobre el botón flotante de WhatsApp. */
+.back-to-top { position: fixed; z-index: 55; right: 20px; bottom: 78px; display: grid; place-items: center; width: 48px; height: 48px; border: 2px solid #fff; border-radius: 50%; background: #c5a572; color: #0d1b2a; box-shadow: 0 4px 16px #0d1b2a4d; transition: transform .18s ease, background .18s ease; }
+.back-to-top:hover { background: #d3b487; transform: translateY(-2px); }
+
+/* Índice de la portada: en móvil se vuelve una fila de fichas desplazable
+   para saltar de sección sin recorrer toda la página. */
+@media (max-width: 760px) {
+  .home-toc ul { display: flex; flex-wrap: nowrap; gap: 7px; margin: 0; padding: 0 0 6px; list-style: none; overflow-x: auto; scrollbar-width: thin; }
+  .home-toc li { flex: 0 0 auto; margin: 0; padding: 0; }
+  .home-toc li a { display: block; padding: 6px 11px; border: 1px solid var(--line); border-radius: 999px; background: #fff; white-space: nowrap; font-size: 11px; }
+  .home-toc .legal-precision { display: none; }
+}
+
+@media (max-width: 860px) {
+  .nav-cta { margin: 8px 9px; padding: 0 14px !important; min-height: 40px; align-self: stretch; justify-content: center; border-bottom: 0 !important; }
+  .breadcrumb-trail { padding: 12px 24px 0; }
+  .back-to-top { right: 13px; bottom: 70px; width: 46px; height: 46px; }
+}
+@media (max-width: 560px) {
+  .breadcrumb-trail { padding: 10px 23px 0; }
 }

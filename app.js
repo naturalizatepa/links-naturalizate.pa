@@ -369,5 +369,15 @@ function openHashDetails() {
 window.addEventListener("hashchange", openHashDetails);
 openHashDetails();
 
+/* --------------------------------------------------------- volver arriba */
+const backToTop = document.querySelector(".back-to-top");
+if (backToTop) {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const toggleBackToTop = () => { backToTop.hidden = window.scrollY < 600; };
+  window.addEventListener("scroll", toggleBackToTop, { passive: true });
+  toggleBackToTop();
+  backToTop.addEventListener("click", () => window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" }));
+}
+
 const year = document.getElementById("year");
 if (year) year.textContent = new Date().getFullYear();
