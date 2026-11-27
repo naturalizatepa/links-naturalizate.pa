@@ -5,17 +5,29 @@
 const menuToggle = document.querySelector(".menu-toggle");
 const navLinks = document.getElementById("nav-links");
 const dropdowns = [...document.querySelectorAll("[data-dropdown]")];
+const subdropdowns = [...document.querySelectorAll("[data-subdropdown]")];
 const mobileView = window.matchMedia("(max-width: 860px)");
 
+function caretOf(item) {
+  return item.querySelector(":scope > .nav-caret") || item.querySelector(":scope > .nav-subrow > .nav-subcaret");
+}
+
+function setItemState(item, open) {
+  item.classList.toggle("is-open", open);
+  const caret = caretOf(item);
+  if (!caret) return;
+  caret.setAttribute("aria-expanded", String(open));
+  const label = caret.getAttribute("aria-label") || "";
+  caret.setAttribute("aria-label", label.replace(open ? "Abrir" : "Cerrar", open ? "Cerrar" : "Abrir"));
+}
+
+function closeSubdropdowns(except = null) {
+  subdropdowns.forEach((item) => { if (item !== except) setItemState(item, false); });
+}
+
 function closeDropdowns(except = null) {
-  dropdowns.forEach((item) => {
-    if (item === except) return;
-    item.classList.remove("is-open");
-    const button = item.querySelector(".nav-caret");
-    if (!button) return;
-    button.setAttribute("aria-expanded", "false");
-    button.setAttribute("aria-label", button.getAttribute("aria-label").replace("Cerrar", "Abrir"));
-  });
+  dropdowns.forEach((item) => { if (item !== except) setItemState(item, false); });
+  closeSubdropdowns();
 }
 
 function closeMenu() {
@@ -27,6 +39,14 @@ function closeMenu() {
   closeDropdowns();
 }
 
+function toggleSubdropdown(item) {
+  const open = !item.classList.contains("is-open");
+  [...item.parentElement.querySelectorAll(":scope > [data-subdropdown]")].forEach((sibling) => {
+    if (sibling !== item) setItemState(sibling, false);
+  });
+  setItemState(item, open);
+}
+
 if (menuToggle && navLinks) {
   menuToggle.addEventListener("click", () => {
     const open = navLinks.classList.toggle("is-open");
@@ -35,27 +55,76 @@ if (menuToggle && navLinks) {
     menuToggle.setAttribute("aria-label", open ? "Cerrar menú" : "Abrir menú");
     if (!open) closeDropdowns();
   });
-
-  navLinks.querySelectorAll("a").forEach((link) => {
-    link.addEventListener("click", () => {
-      if (mobileView.matches) closeMenu();
-      else closeDropdowns();
-    });
-  });
   mobileView.addEventListener("change", () => closeMenu());
 }
 
+/* Escritorio: el despliegue al pasar el cursor lo resuelve el CSS (fundido +
+   flyout). El clic en la flecha fija el panel para teclado / pantalla táctil. */
 dropdowns.forEach((item) => {
-  const button = item.querySelector(".nav-caret");
-  if (!button) return;
-  button.addEventListener("click", () => {
+  const caret = item.querySelector(":scope > .nav-caret");
+  if (!caret) return;
+  caret.addEventListener("click", (event) => {
+    event.stopPropagation();
     const open = !item.classList.contains("is-open");
     closeDropdowns(item);
-    item.classList.toggle("is-open", open);
-    button.setAttribute("aria-expanded", String(open));
-    button.setAttribute("aria-label", `${open ? "Cerrar" : "Abrir"} submenú de ${item.querySelector(".nav-link").textContent.trim()}`);
+    setItemState(item, open);
   });
 });
+
+subdropdowns.forEach((item) => {
+  const caret = item.querySelector(":scope > .nav-subrow > .nav-subcaret");
+  if (!caret) return;
+  caret.addEventListener("click", (event) => {
+    event.stopPropagation();
+    toggleSubdropdown(item);
+  });
+});
+
+/* Los submenús largos (p. ej. migración) se reubican hacia arriba para que
+   siempre quepan en la pantalla; el desplazamiento interno lo resuelve el CSS. */
+function positionFlyout(item) {
+  const panel = item.querySelector(":scope > .nav-subpanel");
+  if (!panel || mobileView.matches) return;
+  panel.style.top = "";
+  const overflow = panel.getBoundingClientRect().bottom - (window.innerHeight - 12);
+  if (overflow > 0) panel.style.top = `${-overflow}px`;
+}
+
+subdropdowns.forEach((item) => {
+  item.addEventListener("mouseenter", () => positionFlyout(item));
+  item.addEventListener("mouseleave", () => {
+    const panel = item.querySelector(":scope > .nav-subpanel");
+    if (panel) panel.style.top = "";
+  });
+});
+
+/* Móvil: acordeón. Los enlaces con hijos despliegan su nivel en lugar de
+   navegar; los enlaces hoja cierran el menú y navegan. */
+if (navLinks) {
+  navLinks.addEventListener("click", (event) => {
+    const link = event.target.closest("a");
+    if (!link) return;
+    if (mobileView.matches) {
+      const subrow = link.closest(".nav-subrow");
+      if (subrow) {
+        event.preventDefault();
+        toggleSubdropdown(subrow.closest("[data-subdropdown]"));
+        return;
+      }
+      const topItem = link.closest("[data-dropdown]");
+      if (topItem && link.classList.contains("nav-link")) {
+        event.preventDefault();
+        const open = !topItem.classList.contains("is-open");
+        closeDropdowns(topItem);
+        setItemState(topItem, open);
+        return;
+      }
+      closeMenu();
+    } else {
+      closeDropdowns();
+    }
+  });
+}
 
 /* ---------------------------------------------------------------- buscador */
 

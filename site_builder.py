@@ -29,26 +29,66 @@ def nav_link(href, label, active, key):
     return f'<a class="nav-link" href="{href}"{current}>{label}</a>'
 
 
-def dropdown(href, label, key, active, links, identifier):
+# Chevron único reutilizado por todos los niveles del menú (gira por CSS).
+CARET = '<svg viewBox="0 0 12 12" width="11" height="11" aria-hidden="true"><path d="m2 4.5 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>'
+
+
+def menu_list(nodes, level):
+    """Lista de submenú recursiva, como el MegaNavbar de la referencia.
+
+    Los nodos con `children` despliegan un panel lateral (flyout) en escritorio
+    y un acordeón anidado en móvil. Cada nivel usa el mismo marcado, de modo que
+    el efecto al desplegar es idéntico en todos los niveles.
+    """
+    items = []
+    for node in nodes:
+        href, label = node["href"], escape(node["label"])
+        children = node.get("children")
+        if children:
+            identifier = node["id"]
+            items.append(
+                f'<li class="nav-subitem has-submenu" data-subdropdown>'
+                f'<div class="nav-subrow"><a class="nav-sublink" href="{href}">{label}</a>'
+                f'<button class="nav-subcaret" type="button" aria-label="Abrir submenú de {label}" aria-expanded="false" aria-controls="{identifier}">{CARET}</button></div>'
+                f'<div class="nav-subpanel" id="{identifier}">{menu_list(children, level + 1)}</div>'
+                f'</li>'
+            )
+        else:
+            items.append(f'<li class="nav-subitem"><a class="nav-sublink" href="{href}">{label}</a></li>')
+    return f'<ul class="nav-menu nav-menu-l{level}">' + "".join(items) + "</ul>"
+
+
+def dropdown(href, label, key, active, nodes, identifier, align_right=False):
     current = ' aria-current="page"' if active == key else ""
-    entries = "\n".join(f'<a href="{url}">{name}</a>' for url, name in links)
+    panel_class = "nav-panel nav-panel-right" if align_right else "nav-panel"
     return f'''<div class="nav-item has-dropdown" data-dropdown>
       <a class="nav-link" href="{href}"{current}>{label}</a>
-      <button class="nav-caret" type="button" aria-label="Abrir submenú de {label}" aria-expanded="false" aria-controls="{identifier}">
-        <svg viewBox="0 0 12 12" width="12" height="12" aria-hidden="true"><path d="m2 4.5 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" /></svg>
-      </button>
-      <div class="nav-panel" id="{identifier}">{entries}</div>
+      <button class="nav-caret" type="button" aria-label="Abrir submenú de {label}" aria-expanded="false" aria-controls="{identifier}">{CARET}</button>
+      <div class="{panel_class}" id="{identifier}">{menu_list(nodes, 2)}</div>
     </div>'''
 
 
 def navigation(active):
-    areas = [(f"areas-de-practica.html#{group['slug']}", f"{group['number']} {group['title']}") for group in LEGAL_GROUPS]
-    areas.append(("areas-de-practica.html", "Ver el catálogo completo →"))
+    # Menú de tres niveles: Áreas de práctica → categoría → servicios, igual que
+    # la navegación pública de la referencia, pero con el catálogo del despacho.
+    areas = [
+        {
+            "href": f"{category['slug']}.html",
+            "label": category["title"],
+            "id": f"submenu-{category['slug']}",
+            "children": [
+                {"href": f"{category['slug']}.html#{service['slug']}", "label": service["title"]}
+                for service in category["services"]
+            ],
+        }
+        for category in CATEGORIES
+    ]
+    areas.append({"href": "areas-de-practica.html", "label": "Ver el catálogo completo →"})
     information = [
-        ("informacion-legal.html#articulos", "Notas de práctica"),
-        ("informacion-legal.html#proceso", "Etapas del trabajo"),
-        ("informacion-legal.html#enlaces-oficiales", "Enlaces del Gobierno"),
-        (GUIDE, "Guía de Naturalízate.pa ↗"),
+        {"href": "informacion-legal.html#articulos", "label": "Notas de práctica"},
+        {"href": "informacion-legal.html#proceso", "label": "Etapas del trabajo"},
+        {"href": "informacion-legal.html#enlaces-oficiales", "label": "Enlaces del Gobierno"},
+        {"href": GUIDE, "label": "Guía de Naturalízate.pa ↗"},
     ]
     items = [
         nav_link("index.html", "Inicio", active, "inicio"),
@@ -57,7 +97,7 @@ def navigation(active):
         nav_link("propiedades.html", "Propiedades", active, "propiedades"),
         nav_link("honorarios.html", "Honorarios", active, "honorarios"),
         nav_link("descargo.html", "Descargo", active, "descargo"),
-        dropdown("informacion-legal.html", "Información legal", "informacion", active, information, "submenu-informacion"),
+        dropdown("informacion-legal.html", "Información legal", "informacion", active, information, "submenu-informacion", align_right=True),
         nav_link("herramientas.html", "Herramientas", active, "herramientas"),
         nav_link("contacto.html", "Contáctenos", active, "contacto"),
     ]
