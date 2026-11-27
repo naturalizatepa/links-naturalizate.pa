@@ -354,5 +354,20 @@ for (const button of document.querySelectorAll("[data-share]")) {
   });
 }
 
+/* Áreas de práctica: al llegar con un #ancla, desplegar la sección apuntada
+   (y cualquier subsección ancestro) para que el enlace del menú no quede oculto. */
+function openHashDetails() {
+  const id = decodeURIComponent(location.hash.slice(1));
+  if (!id) return;
+  const target = document.getElementById(id);
+  if (!target) return;
+  const own = target.matches("details") ? target : target.querySelector("details");
+  if (own) own.open = true;
+  let ancestor = target.closest("details");
+  while (ancestor) { ancestor.open = true; ancestor = ancestor.parentElement.closest("details"); }
+}
+window.addEventListener("hashchange", openHashDetails);
+openHashDetails();
+
 const year = document.getElementById("year");
 if (year) year.textContent = new Date().getFullYear();

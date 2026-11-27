@@ -1,0 +1,8 @@
+# Dependencias y artefactos de build (no versionar)
+node_modules/
+.cache/
+.npm/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store

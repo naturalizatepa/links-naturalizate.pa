@@ -217,27 +217,46 @@ def home():
     </section>'''
 
 
+CHEVRON = '<svg class="pa-chev" viewBox="0 0 12 12" width="14" height="14" aria-hidden="true"><path d="m2 4.5 4 4 4-4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" /></svg>'
+
+
 def practice_index():
     sections = []
-    for group in LEGAL_GROUPS:
-        entries = "\n".join(
-            f'''<a href="{CATEGORY_BY_SLUG[slug]['slug']}.html"><span>{len(CATEGORY_BY_SLUG[slug]['services'])} servicios</span><strong>{escape(CATEGORY_BY_SLUG[slug]['title'])}</strong><small>{escape(CATEGORY_BY_SLUG[slug]['intro'])}</small></a>'''
-            for slug in group["categories"]
-        )
-        audience = " ".join(CATEGORY_BY_SLUG[slug]["audience"] for slug in group["categories"])
-        sections.append(f'''<section class="content-section" id="{group['slug']}">
-          <span class="section-index">{group['number']} · Área del derecho</span>
-          <h2>{escape(group['title'])}</h2>
-          <p>{escape(group['intro'])}</p>
-          <p class="audience-line"><strong>A quién ayudamos:</strong> {escape(audience)}</p>
-          <div class="article-list">{entries}</div>
-        </section>''')
+    for gi, group in enumerate(LEGAL_GROUPS):
+        cats = [CATEGORY_BY_SLUG[slug] for slug in group["categories"]]
+        total = sum(len(c["services"]) for c in cats)
+        audience = " ".join(c["audience"] for c in cats)
+        subs = []
+        for cat in cats:
+            services = "".join(
+                f'<li><a href="{cat["slug"]}.html#{svc["slug"]}"><span class="pa-svc-title">{escape(svc["title"])}</span><small>{escape(svc["description"])}</small></a></li>'
+                for svc in cat["services"]
+            )
+            subs.append(f'''<details class="pa-details pa-level2">
+            <summary class="pa-summary pa-sub-summary"><span class="pa-title">{escape(cat['title'])}</span><span class="pa-count">{len(cat['services'])} servicios</span>{CHEVRON}</summary>
+            <div class="pa-body">
+              <p class="pa-intro">{escape(cat['intro'])}</p>
+              <ul class="pa-services">{services}</ul>
+              <a class="pa-more" href="{cat['slug']}.html">Ver el área completa <span aria-hidden="true">→</span></a>
+            </div>
+          </details>''')
+        opened = " open" if gi == 0 else ""
+        sections.append(f'''<section class="content-section pa-group" id="{group['slug']}">
+        <details class="pa-details pa-level1"{opened}>
+          <summary class="pa-summary"><span class="pa-head"><span class="section-index">{group['number']} · Área del derecho</span><span class="pa-title">{escape(group['title'])}</span></span><span class="pa-count">{len(cats)} áreas · {total} servicios</span>{CHEVRON}</summary>
+          <div class="pa-body">
+            <p>{escape(group['intro'])}</p>
+            <p class="audience-line"><strong>A quién ayudamos:</strong> {escape(audience)}</p>
+            <div class="pa-subsections">{''.join(subs)}</div>
+          </div>
+        </details>
+      </section>''')
     return f'''<div class="content-columns">
       <article class="article-main">
         <div class="page-heading">
       <span class="eyebrow">Áreas de práctica</span>
       <h1>Áreas del derecho. Trámites específicos.</h1>
-      <p>Seleccione primero el ámbito jurídico y después el procedimiento de su interés. Cada ficha indica a quién ayuda; alcance, documentos y honorarios se acuerdan tras revisar el asunto.</p>
+      <p>Despliegue cada área del derecho y, dentro de ella, cada subsección para ver sus trámites. Cada ficha indica a quién ayuda; alcance, documentos y honorarios se acuerdan tras revisar el asunto.</p>
       <span class="count-chip">{sum(len(cat['services']) for cat in CATEGORIES)} servicios en {len(LEGAL_GROUPS)} áreas del derecho</span>
     </div>
         {orientation_note()}

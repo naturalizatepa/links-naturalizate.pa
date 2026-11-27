@@ -159,7 +159,7 @@ def footer():
           <div class="contact-row"><span class="contact-symbol" aria-hidden="true">◔</span><div><strong>WhatsApp</strong><a href="{WHATSAPP}" target="_blank" rel="noopener noreferrer">+507 6255-7583</a></div></div>
           <div class="contact-row"><span class="contact-symbol" aria-hidden="true">✉</span><div><strong>Correo electrónico</strong><a href="mailto:{EMAIL}">{EMAIL}</a></div></div>
           <div class="contact-row"><span class="contact-symbol" aria-hidden="true">§</span><div><strong>Idoneidad</strong><address>No. 25795<br />Corte Suprema de Justicia de Panamá</address></div></div>
-          <div class="contact-row"><span class="contact-symbol" aria-hidden="true">↗</span><div><strong>Más información</strong><a href="areas-de-practica.html">Áreas de práctica</a><a href="honorarios.html">Criterios de honorarios</a><a href="{GUIDE}" target="_blank" rel="noopener noreferrer">Guía de naturalización</a></div></div>
+          <div class="contact-row"><span class="contact-symbol" aria-hidden="true">↗</span><div><strong>Más información</strong><a href="areas-de-practica.html">Áreas de práctica</a><a href="honorarios.html">Criterios de honorarios</a><a href="{GUIDE}" target="_blank" rel="noopener noreferrer">Guía de naturalización</a><a href="brandbook.html">Manual de marca</a></div></div>
         </section>
         <section class="footer-map-col" aria-labelledby="footer-map-title">
           <h2 id="footer-map-title">Ubicación</h2>

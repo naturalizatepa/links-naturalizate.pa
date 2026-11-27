@@ -1,0 +1,1 @@
+{"name": "links-naturalizate-pa", "version": "1.0.0", "private": true, "description": "Sitio estático de Alfonso Villarreal · Abogado + activos de marca.", "type": "module", "scripts": {"brand": "node tools/build-brand-assets.mjs", "build": "python3 -B site_builder.py"}, "dependencies": {"sharp": "^0.35.5"}}
